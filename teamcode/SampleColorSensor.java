@@ -27,6 +27,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+// Carlo note
+// This file tests out the color sensor. it takes the color detected and
+// changes the background of the phone screen to match the color.
+// The sensor's name is set to "sensor_color"
+// Using the sensor only takes a few lines, and the big chunk of this file
+// is turning the RGB from the sensor into HSV, and HSV to "Color" in order
+// to change the color of the phone screen.
+// There's also a part that toggles the sensor on and off with a gamepad button
+
+
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
@@ -37,6 +47,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+
 
 /*
  *
@@ -111,7 +122,7 @@ public class SampleColorSensor extends LinearOpMode {
       Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
 
       // send the info back to driver station using telemetry function.
-      telemetry.addData("LED", bLedOn ? "On" : "Off");
+      telemetry.addData("LED", bLedOn ? "On" : "Off"); //Carlo note: thats a cool syntax shortcut, remember for later
       telemetry.addData("Clear", colorSensor.alpha());
       telemetry.addData("Red  ", colorSensor.red());
       telemetry.addData("Green", colorSensor.green());

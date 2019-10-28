@@ -93,6 +93,7 @@ public class ThreeAxisMovement extends LinearOpMode {
             double leftPower;
             double rightPower;
 
+
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
@@ -116,8 +117,8 @@ public class ThreeAxisMovement extends LinearOpMode {
             float Rx; //= 1/gamepad1.right_stick_x;
             
             Ly = gamepad1.left_stick_y;
-            Lx = gamepad1.left_stick_x;
-            Rx = gamepad1.right_stick_x;
+            Lx = -gamepad1.left_stick_x;
+            Rx = -gamepad1.right_stick_x;
            
             /*
             if(gamepad1.left_stick_y != 0) {
@@ -142,6 +143,10 @@ public class ThreeAxisMovement extends LinearOpMode {
             double rightfront = (Ly + Lx - Rx)/3;
             double rightback = (Ly - Lx - Rx)/3;
 
+            //test encoder stuff
+            int lfpos = leftFront.getCurrentPosition();
+            telemetry.addData("Encoder Position", lfpos);
+            
             // Send calculated power to wheels
             leftBack.setPower(leftback);
             rightBack.setPower(rightback);
@@ -158,7 +163,9 @@ public class ThreeAxisMovement extends LinearOpMode {
             telemetry.addData("leftback", leftback);
             telemetry.addData("rightfront", rightfront);
             telemetry.addData("rightback", rightback);
-            // telemetry.addData("rightPower",rightPower);
+            
+           
+            
 
             // telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();

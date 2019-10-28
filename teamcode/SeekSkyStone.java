@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import java.lang.reflect.*;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -190,11 +191,15 @@ public class SeekSkyStone extends LinearOpMode {
             telemetry.addData("Right Front Power", rfP);
             telemetry.addData("Left Back Power", lbP);
             telemetry.addData("Right Back Power", rbP);
+            
+            telemetry.addData("Angle", recognition.estimateAngleToObject(AngleUnit.DEGREES));
+            telemetry.addData("recognition", recognition);
+            
             // Set power levels to get closer to Skystone.
-            left_front.setPower(lfP);
-            right_front.setPower(rfP);
-            left_back.setPower(lbP);
-            right_back.setPower(rbP);
+            // left_front.setPower(lfP);
+            // right_front.setPower(rfP);
+            // left_back.setPower(lbP);
+            // right_back.setPower(rbP);
             // We've found a Skystone so we don't have
             // to look at rest of detected objects.
             // Break out of For-each-recognition.
@@ -224,7 +229,7 @@ public class SeekSkyStone extends LinearOpMode {
     // LeftMotor.setPower(0);
     // RightMotor.setPower(0);
     // Pause to let driver station to see last telemetry.
-    sleep(2000);
+    sleep(500);
 
     vuforiaSkyStone.close();
     tfodSkyStone.close();

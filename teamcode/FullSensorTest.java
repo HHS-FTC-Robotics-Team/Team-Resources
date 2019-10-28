@@ -67,7 +67,7 @@ public class FullSensorTest extends LinearOpMode {
     digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
 
     // set the digital channel to input (for touch sensor)
-    digitalTouch.setMode(DigitalChannel.Mode.INPUT)
+    digitalTouch.setMode(DigitalChannel.Mode.INPUT);
     // turn on color sensor
     colorSensor.enableLed(true);
 

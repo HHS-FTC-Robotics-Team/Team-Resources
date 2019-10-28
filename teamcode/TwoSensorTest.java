@@ -30,10 +30,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import android.graphics.Color;
 import android.view.View;
-
+import org.firstinspires.ftc.teamcode.Anish;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -61,6 +62,7 @@ public class TwoSensorTest extends LinearOpMode {
 
   @Override
   public void runOpMode() {
+  
     
     // get a reference to our digitalTouch object.
     digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");

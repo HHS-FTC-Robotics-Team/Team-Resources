@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -43,20 +44,12 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Sensor: Digital touch", group = "Sensor")
+@TeleOp(name = "TwoHubTouchTest", group = "Sensor")
 
-public class SampleTouchSensor extends LinearOpMode {
-    /**
-     * The REV Robotics Touch Sensor
-     * is treated as a digital channel.  It is HIGH if the button is unpressed.
-     * It pulls LOW if the button is pressed.
-     *
-     * Also, when you connect a REV Robotics Touch Sensor to the digital I/O port on the
-     * Expansion Hub using a 4-wire JST cable, the second pin gets connected to the Touch Sensor.
-     * The lower (first) pin stays unconnected.*
-     */ //Carlo note: this part is important^ the touch needs to be connected to pin 1
+public class TwoRevhubTouchTest extends LinearOpMode {
 
     DigitalChannel digitalTouch;  // Hardware Device Object
+    private DcMotor motor = null;
 
     @Override
     public void runOpMode() {
@@ -65,20 +58,21 @@ public class SampleTouchSensor extends LinearOpMode {
         digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
         // set the digital channel to input.
         digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+        motor = hardwareMap.get(DcMotor.class, "motor");
+        motor.setDirection(DcMotor.Direction.FORWARD);
+        
         // wait for the start button to be pressed.
         waitForStart();
 
-        // while the op mode is active, loop and read the light levels.
-        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive()) {
 
             // send the info back to driver station using telemetry function.
             // if the digital channel returns true it's HIGH and the button is unpressed.
             if (digitalTouch.getState() == true) {
                 telemetry.addData("Digital Touch", "Is Not Pressed");
-                
             } else {
                 telemetry.addData("Digital Touch", "Is Pressed");
+                motor.setPower(0.5);
             }
 
             telemetry.update();

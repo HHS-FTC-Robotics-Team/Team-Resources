@@ -54,8 +54,8 @@ public class SampleServoTest extends LinearOpMode {
 
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double MAX_POS     =  .82;     // Maximum rotational position
+    static final double MIN_POS     =  .17;     // Minimum rotational position
 
     // Define class members
     Servo   servo;
@@ -79,32 +79,32 @@ public class SampleServoTest extends LinearOpMode {
         // Scan servo till stop pressed.
         while(opModeIsActive()){
             
-            if (gamepad1.b) {
-                position += INCREMENT ;
-            }
-            if (gamepad1.x) {
-                position -= INCREMENT ;
-            }
-            // position += gamepad1.b ;
-            // position -= gamepad1.x ;
-            
-            // // slew the servo, according to the rampUp (direction) variable.
-            // if (rampUp) {
-            //     // Keep stepping up until we hit the max value.
+            // if (gamepad1.b) {
             //     position += INCREMENT ;
-            //     if (position >= MAX_POS ) {
-            //         position = MAX_POS;
-            //         rampUp = !rampUp;   // Switch ramp direction
-            //     }
             // }
-            // else {
-            //     // Keep stepping down until we hit the min value.
+            // if (gamepad1.x) {
             //     position -= INCREMENT ;
-            //     if (position <= MIN_POS ) {
-            //         position = MIN_POS;
-            //         rampUp = !rampUp;  // Switch ramp direction
-            //     }
             // }
+            // // position += gamepad1.b ;
+            // // position -= gamepad1.x ;
+            
+            // slew the servo, according to the rampUp (direction) variable.
+            if (rampUp) {
+                // Keep stepping up until we hit the max value.
+                position += INCREMENT ;
+                if (position >= MAX_POS ) {
+                    position = MAX_POS;
+                    rampUp = !rampUp;   // Switch ramp direction
+                }
+            }
+            else {
+                // Keep stepping down until we hit the min value.
+                position -= INCREMENT ;
+                if (position <= MIN_POS ) {
+                    position = MIN_POS;
+                    rampUp = !rampUp;  // Switch ramp direction
+                }
+            }
 
             // Display the current value
             telemetry.addData("Servo Position", "%5.2f", position);

@@ -52,7 +52,7 @@ public class Arm extends LinearOpMode {
     // kill the motor if the touch sensor gets pressed
   }
   
-  public voide setState(int state) {
+  public void setState(int state) {
     return position;
   }
   

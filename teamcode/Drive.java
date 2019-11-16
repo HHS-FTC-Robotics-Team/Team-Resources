@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 public class Drive extends LinearOpMode {
-  
+
   public double powerlf;
   public DcMotor motorlf = null;
   public double powerlb;
@@ -19,7 +19,7 @@ public class Drive extends LinearOpMode {
   public DcMotor motorrf = null;
   public double powerrb;
   public DcMotor motorrb = null;
-    
+
   public Drive(DcMotor lf, DcMotor lb, DcMotor rf, DcMotor rb) {
     powerlf = 0;
     motorlf = lf;
@@ -48,26 +48,20 @@ public class Drive extends LinearOpMode {
     motorrf.setPower(rightfront);
     powerrb = rightback;
     motorrb.setPower(rightback);
-  
-  
   }
-  
+
+  public void setPower(double lf, double lb, double rf, double rb) {
+    motorlf.setPower(lf);
+    motorlb.setPower(lb);
+    motorrf.setPower(rf);
+    motorrb.setPower(rb);
+  }
+
   public double getPowerlf() {
     return powerlf;
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
   public void runOpMode() {
   }
 }

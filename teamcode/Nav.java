@@ -20,6 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.lang.Math;
+//import Find
+//import Collector
   
 
 
@@ -37,11 +39,16 @@ class Nav extends LinearOpMode {
   private BNO055IMU imu = null;
   private Orientation lastAngles = new Orientation();
   private double globalAngle, power = 0.30, correction;
+  Collector collect = null;
   
-  public Nav(Drive drive, BNO055IMU acc) {
+  Find f = new Find();
+  
+  public Nav(Drive drive, BNO055IMU acc, Collector c) {
   
       d = drive;
       imu = acc;
+      collect = c;
+      
       
   }
  
@@ -71,6 +78,28 @@ class Nav extends LinearOpMode {
   }
   
   public void seek(){
+    
+    if(f.countSkystones() > 0) {
+      double angle = f.getSkystoneAngle();
+      if(angle == 0) {
+        turn(angle);
+      } else {
+        //go forward
+      }
+    }
+    
+    if(f.getDistance() < /*something*/) {
+      collect.in();
+    } else {
+      collect.out();
+    }
+    
+    if(f.getBlock()) {
+      state = "rest";
+    }
+    
+    
+    
     
     
   }

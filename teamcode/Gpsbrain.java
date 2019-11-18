@@ -25,6 +25,7 @@ import java.util.stream.Collector;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,13 +37,15 @@ import org.firstinspires.ftc.teamcode.Collect;
 
 class Gpsbrain extends LinearOpMode {
   
-  String state = "rest";
+  String state = "turn";
   
   Drive d = null;
   double x = 0;
   double y = 0;
   double dx = 0;
   double dy = 0;
+  double theta = 0;
+  double dtheta = 0;
   double travelled = 0;
   
   private BNO055IMU imu = null;
@@ -55,19 +58,42 @@ class Gpsbrain extends LinearOpMode {
   
   public Gpsbrain(Drive drive, BNO055IMU acc, Collect c, Find find) {
       d = drive;
+      BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled      = false;
       imu = acc;
+      imu.initialize(parameters);
       collect = c;
       f = find;
   }
  
+  public void update() {
+    telemetry.addData("State: ", state);
+    if(state == "rest") {
+      // nothing
+    }
+    if(state == "turn") {
+      this.turn();
+    }
+  }
+  
+  public void turn() {
+      theta = getAngle();
+      telemetry.addData("Angle: ", theta);
+      telemetry.addData("Look", "Here");
+      d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) );
+      if(Math.abs(theta - dtheta) < 2) {
+        state = "rest";
+      }
+  }
+  
   
   public void turn(double degrees){
-      if (getAngle() > 86) {
-          d.setPower(0,0,0);
-      } else {
-          //set the power for the turn
-      }
-  
+      dtheta = theta + degrees;
+      state = "turn";
   }
   
   public void drive(){

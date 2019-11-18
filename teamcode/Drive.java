@@ -48,6 +48,7 @@ public class Drive extends LinearOpMode {
     motorrf.setPower(rightfront);
     powerrb = rightback;
     motorrb.setPower(rightback);
+    telemetry.addData("Rx: ", Rx);
   }
 
   public void setPower(double lf, double lb, double rf, double rb) {
@@ -55,10 +56,19 @@ public class Drive extends LinearOpMode {
     motorlb.setPower(lb);
     motorrf.setPower(rf);
     motorrb.setPower(rb);
+    telemetry.addData("Left Front: ", lf);
+    telemetry.addData("Left Back: ", lb);
+    telemetry.addData("Right Front: ", rf);
+    telemetry.addData("Right Back: ", rb);
+    
   }
 
-  public double getPowerlf() {
-    return powerlf;
+  public double getPower(String motor) {
+    if(motor == "lf") {
+      return motorlf.getPower();
+    } else {
+      return 0;
+    }
   }
 
 

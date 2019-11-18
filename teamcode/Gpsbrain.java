@@ -71,9 +71,9 @@ class Gpsbrain extends LinearOpMode {
   }
  
   public void update() {
-    telemetry.addData("State: ", state);
     if(state == "rest") {
       // nothing
+      d.setPower(0, 0, 0);
     }
     if(state == "turn") {
       this.turn();

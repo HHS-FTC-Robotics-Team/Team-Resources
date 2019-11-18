@@ -25,11 +25,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Gpsbrain;
 import org.firstinspires.ftc.teamcode.Drive;
 import org.firstinspires.ftc.teamcode.Collect;
-
+import org.firstinspires.ftc.teamcode.Find;
 
 @Autonomous
 
@@ -37,6 +38,7 @@ public class Test extends LinearOpMode {
     
     private Drive d;
     private Collect c;
+    private Find f;
     private BNO055IMU imu;
     private Gpsbrain gps;
 
@@ -44,29 +46,41 @@ public class Test extends LinearOpMode {
     public void runOpMode() {
 
         d = new Drive(
-            hardwareMap.get(DcMotor.class, "motorlf"),
-            hardwareMap.get(DcMotor.class, "motorlb"),
-            hardwareMap.get(DcMotor.class, "motorrf"),
-            hardwareMap.get(DcMotor.class, "motorrb")
+            hardwareMap.get(DcMotor.class, "lf"),
+            hardwareMap.get(DcMotor.class, "lb"),
+            hardwareMap.get(DcMotor.class, "rf"),
+            hardwareMap.get(DcMotor.class, "rb")
         );
         
         c = new Collect(
         );
             
         imu = hardwareMap.get(BNO055IMU.class, "imu");
+        
+        f = new Find(
+            // hardwareMap.get(DistanceSensor.class, "sensor_range")
+        );
     
-        gps = new Gpsbrain(d, imu, c);
+        gps = new Gpsbrain(d, imu, c, f);
     
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
+        
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running");
+            
+            
+            // double a = gps.getAngle();
+            // telemetry.addData("Angle", a);
+            f.senseSkystones();
+            int skystones = f.countSkystones();
+            double angle = f.findSkystoneAngle();
+            telemetry.addData("Skystones", skystones);
+            telemetry.addData("Angle", angle);
             telemetry.update();
-
         }
     }
 }

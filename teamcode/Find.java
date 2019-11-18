@@ -1,10 +1,38 @@
-//import everything
-//including a distance sensor
-//import vuforia stuff
+package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaSkyStone;
+import org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+//import java.util.stream.Collector;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Collect;
+import org.firstinspires.ftc.teamcode.Drive;
+import org.firstinspires.ftc.teamcode.Find;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import java.lang.reflect.*;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+import java.util.List;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaSkyStone;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-class Find extends LinearOpMode {
+public class Find extends LinearOpMode {
   
-  private DistanceSensor dist = null;
+  // private DistanceSensor dist = null;
   private VuforiaSkyStone vuforiaSkyStone;
   private TfodSkyStone tfodSkyStone;
   
@@ -13,12 +41,12 @@ class Find extends LinearOpMode {
   float ObjectHeight;
   double ObjectAngle;
   double ObjectHeightRatio;
-  double SkystoneCount;
+  int SkystoneCount;
   boolean SkystoneFound;
   double TargetHeightRatio;
   
-  public Find(DistanceSensor d) {
-    dist = d;
+  public Find(/*DistanceSensor d*/) {
+    // dist = d;
     vuforiaSkyStone = new VuforiaSkyStone();
     tfodSkyStone = new TfodSkyStone();
    
@@ -37,13 +65,13 @@ class Find extends LinearOpMode {
       0, // zAngle
       false); // useCompetitionFieldTargetLocations
       
-    telemetry.addData("Vuforia", "initialized");
-    telemetry.update();
+    // telemetry.addData("Vuforia", "initialized");
+    // telemetry.update();
     // Let's use 70% minimum confidence and
     // and no object tracker.
     tfodSkyStone.initialize(vuforiaSkyStone, 0.7F, false, true);
-    telemetry.addData(">", "Press Play to start");
-    telemetry.update();
+    // telemetry.addData(">", "Press Play to start");
+    // telemetry.update();
     // Set target ratio of object height to image
     // height value corresponding to the length
     // of the robot's neck.
@@ -57,60 +85,48 @@ class Find extends LinearOpMode {
   
   
   // "getter" method
-  public float getDistance() {
-    float distance = dist.getDistance(DistanceUnit.MM);
-    return distance;
-  }
+  // public double getDistance() {
+  //   double distance = dist.getDistance(DistanceUnit.MM);
+  //   return distance;
+  // }
   
   public double findSkystoneAngle() {
-    recognitions = tfodSkyStone.getRecognitions();
-    // Report number of recognitions.
-    telemetry.addData("Objects Recognized", recognitions.size());
-    // If some objects detected...
-    if (recognitions.size() > 0) {
-      // ...let's count how many are gold.
-      SkystoneCount = 0;
-      // Step through the stones detected.
-      for (Recognition recognition : recognitions) {
-        if (recognition.getLabel().equals("Skystone")) {
-          // A Skystone has been detected.
-          SkystoneCount = SkystoneCount + 1;
-          // We can assume this is the first Skystone
-          // because we break out of this loop below after
-          // using the information from the first Skystone.
-          // We don't need to calculate turn angle to Skystone
-          // because TensorFlow has estimated it for us.
-          ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
-          // Negative angle means Skystone is left, else right.
-          telemetry.addData("Estimated Angle", ObjectAngle);
-          return ObjectAngle
-        }
-      }
-    }
+    return ObjectAngle;
+  }
     
     public int countSkystones() {
+      return SkystoneCount;
+    }
+    
+    public void senseSkystones() {
       recognitions = tfodSkyStone.getRecognitions();
-    // Report number of recognitions.
-    telemetry.addData("Objects Recognized", recognitions.size());
-    // If some objects detected...
-    if (recognitions.size() > 0) {
-      // ...let's count how many are gold.
+      // Report number of recognitions.
+      // telemetry.addData("Objects Recognized", recognitions.size());
+      // If some objects detected...
       SkystoneCount = 0;
-      // Step through the stones detected.
-      for (Recognition recognition : recognitions) {
-        if (recognition.getLabel().equals("Skystone")) {
-          // A Skystone has been detected.
-          SkystoneCount = SkystoneCount + 1;
+      ObjectAngle = 0;
+      if (recognitions.size() > 0) {
+        // ...let's count how many are gold.
+        // Step through the stones detected.
+        for (Recognition recognition : recognitions) {
+          if (recognition.getLabel().equals("Skystone")) {
+            // A Skystone has been detected.
+            SkystoneCount = SkystoneCount + 1;
+            // We can assume this is the first Skystone
+            // because we break out of this loop below after
+            // using the information from the first Skystone.
+            // We don't need to calculate turn angle to Skystone
+            // because TensorFlow has estimated it for us.
+            ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+          }
         }
       }
-      return SkystoneCount
     }
-  }
   
   
 
   
-  public runOpMode() {
+  public void runOpMode() {
     
   }
 }

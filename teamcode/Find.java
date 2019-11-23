@@ -32,7 +32,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Find extends LinearOpMode {
   
-  // private DistanceSensor dist = null;
+  private DistanceSensor dist = null;
   private VuforiaSkyStone vuforiaSkyStone;
   private TfodSkyStone tfodSkyStone;
   
@@ -45,8 +45,8 @@ public class Find extends LinearOpMode {
   boolean SkystoneFound;
   double TargetHeightRatio;
   
-  public Find(/*DistanceSensor d*/) {
-    // dist = d;
+  public Find(DistanceSensor d) {
+    dist = d;
     vuforiaSkyStone = new VuforiaSkyStone();
     tfodSkyStone = new TfodSkyStone();
    
@@ -65,13 +65,13 @@ public class Find extends LinearOpMode {
       0, // zAngle
       false); // useCompetitionFieldTargetLocations
       
-    // telemetry.addData("Vuforia", "initialized");
-    // telemetry.update();
+    telemetry.addData("Vuforia", "initialized");
+    telemetry.update();
     // Let's use 70% minimum confidence and
     // and no object tracker.
     tfodSkyStone.initialize(vuforiaSkyStone, 0.7F, false, true);
-    // telemetry.addData(">", "Press Play to start");
-    // telemetry.update();
+    telemetry.addData(">", "Press Play to start");
+    telemetry.update();
     // Set target ratio of object height to image
     // height value corresponding to the length
     // of the robot's neck.
@@ -85,42 +85,57 @@ public class Find extends LinearOpMode {
   
   
   // "getter" method
-  // public double getDistance() {
-  //   double distance = dist.getDistance(DistanceUnit.MM);
-  //   return distance;
-  // }
+  public double getDistance() {
+    double distance = dist.getDistance(DistanceUnit.MM);
+    return distance;
+  }
   
   public double findSkystoneAngle() {
+    recognitions = tfodSkyStone.getRecognitions();
+    // Report number of recognitions.
+    telemetry.addData("Objects Recognized", recognitions.size());
+    // If some objects detected...
+    if (recognitions.size() > 0) {
+      // ...let's count how many are gold.
+      SkystoneCount = 0;
+      // Step through the stones detected.
+      for (Recognition recognition : recognitions) {
+        if (recognition.getLabel().equals("Skystone")) {
+          // A Skystone has been detected.
+          SkystoneCount = SkystoneCount + 1;
+          // We can assume this is the first Skystone
+          // because we break out of this loop below after
+          // using the information from the first Skystone.
+          // We don't need to calculate turn angle to Skystone
+          // because TensorFlow has estimated it for us.
+          ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
+          // Negative angle means Skystone is left, else right.
+          telemetry.addData("Estimated Angle", ObjectAngle);
+          return ObjectAngle;
+        }
+      }
+    }
     return ObjectAngle;
   }
     
     public int countSkystones() {
-      return SkystoneCount;
-    }
-    
-    public void senseSkystones() {
       recognitions = tfodSkyStone.getRecognitions();
       // Report number of recognitions.
-      // telemetry.addData("Objects Recognized", recognitions.size());
+      telemetry.addData("Objects Recognized", recognitions.size());
       // If some objects detected...
-      SkystoneCount = 0;
-      ObjectAngle = 0;
       if (recognitions.size() > 0) {
         // ...let's count how many are gold.
+        SkystoneCount = 0;
         // Step through the stones detected.
         for (Recognition recognition : recognitions) {
           if (recognition.getLabel().equals("Skystone")) {
             // A Skystone has been detected.
             SkystoneCount = SkystoneCount + 1;
-            // We can assume this is the first Skystone
-            // because we break out of this loop below after
-            // using the information from the first Skystone.
-            // We don't need to calculate turn angle to Skystone
-            // because TensorFlow has estimated it for us.
-            ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
           }
         }
+        return SkystoneCount;
       }
+      return SkystoneCount;
     }
   
   

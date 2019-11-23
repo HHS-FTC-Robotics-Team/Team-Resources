@@ -1,30 +1,3 @@
-package org.firstinspires.ftc.teamcode;
-
- import com.qualcomm.hardware.bosch.BNO055IMU;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import java.lang.Math;
-//import Find
-//import Collector
-  
-
-
 class Nav extends LinearOpMode {
   
   String state = "rest";
@@ -53,14 +26,14 @@ class Nav extends LinearOpMode {
   }
  
   
-    public void turn(double degrees){
-        if (getAngle() > 86) {
-            d.setPower(0,0,0);
-        } else {
-            //set the power for the turn
-        }
-    
-    }
+  public void turn(double degrees){
+      if (getAngle() > 86) {
+          d.setPower(0,0,0);
+      } else {
+          //set the power for the turn
+      }
+  
+  }
   
   public void drive(){
     double h =   Math.sqrt((x-dx)*(x-dx)- (y-dy)*(y-dy));

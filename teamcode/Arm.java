@@ -1,11 +1,11 @@
-
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled:
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DigitalChannel
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 public class Arm extends LinearOpMode {
   
@@ -35,26 +35,38 @@ public class Arm extends LinearOpMode {
 //    }
 //  }
   
-  public void home() {
-    
-  }
-  
-  public void down(int d) {
+  public void retract() {
     position = motor.getCurrentPosition();
     
-    if(position >= min) {
-      motor.setPower(1);
-    } else {
-      motor.setPower(0);
-      state = "rest";
-    }
+    motor.setPower(0.3);
     
     // kill the motor if the touch sensor gets pressed
   }
   
-  public void setState(int state) {
-    return position;
+  public void extend(double power) {
+    position = motor.getCurrentPosition();
+    
+    motor.setPower(-0.3 * power);
+    
+    // kill the motor if the touch sensor gets pressed
   }
+  
+  public void rest() {
+    position = motor.getCurrentPosition();
+    
+    motor.setPower(0);
+    
+    // kill the motor if the touch sensor gets pressed
+  }
+  
+  public double getPower() {
+    double p = motor.getPower();
+    return p;
+  }
+  
+  // public void setState(int state) {
+  //   return position;
+  // }
   
   public void runOpMode() {
   }

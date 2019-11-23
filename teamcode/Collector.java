@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled:
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode. TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-//import distance sensor
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 public Collection extends LinearOpMode {
   
@@ -26,18 +26,18 @@ public Collection extends LinearOpMode {
     return distance;
   }
   
-  public boolean getBlock () {
-    boolean gotBlock;
+  // public boolean getBlock () {
+  //   boolean gotBlock;
     
     
-    if(c.getDistance() < /*something*/) {
-      gotBlock = true;
-    } else {
-      gotBlock = false;
-    }
+  //   if(c.getDistance() < /*something*/) {
+  //     gotBlock = true;
+  //   } else {
+  //     gotBlock = false;
+  //   }
     
-    return gotBlock;
-  }
+  //   return gotBlock;
+  // }
   
   
   public void update() {
@@ -45,16 +45,18 @@ public Collection extends LinearOpMode {
   }
     
     
-  public void in (); {
-    
-    
+  public void in(); {
     Lmtr.setPower(1);
     Rmtr.setPower(1);
   }
     
   
-  public void out (); {
-    
+  public void out(); {
+    Lmtr.setPower(-1);
+    Rmtr.setPower(-1);
+  }
+  
+  public void rest(); {
     Lmtr.setPower(0);
     Rmtr.setPower(0);
   }

@@ -58,8 +58,30 @@ public class Drive extends LinearOpMode {
   }
 
   public double getPowerlf() {
+    double lf = motorlf.getPower();
+    
     return powerlf;
   }
+  
+  public double getPowerlb() {
+    double lb = motorlb.getPower();
+    
+    return powerlb;
+  }
+  
+  public double getPowerrf() {
+    double rf = motorlrf.getPower();
+    
+    return powerrf;
+  }
+  
+  public double getPowerrb() {
+    double rb = motorrb.getPower();
+    
+    return powerrb;
+  }
+  
+
 
 
   public void runOpMode() {

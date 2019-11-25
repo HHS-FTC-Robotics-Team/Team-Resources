@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.SciLift;
 import org.firstinspires.ftc.teamcode.Arm;
 import org.firstinspires.ftc.teamcode.Collector;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-
-//import claw class
+import org.firstinspires.ftc.teamcode.Claw;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="Teleop 2019", group="Linear Opmode")
 
@@ -23,7 +23,7 @@ public class Teleop1776 extends LinearOpMode {
     private Drive d;
     private SciLift lift;
     private Collector collector;
-    //private Claw claw;
+    private Claw claw;
     private Arm arm;
 
     @Override
@@ -47,6 +47,9 @@ public class Teleop1776 extends LinearOpMode {
         hardwareMap.get(DcMotor.class, "col_right"),
         hardwareMap.get(DistanceSensor.class, "col_sensor")
       );
+      claw = new Claw(
+        hardwareMap.get(Servo.class, "claw");
+      );
 
       waitForStart();
       while (opModeIsActive()) {
@@ -58,10 +61,10 @@ public class Teleop1776 extends LinearOpMode {
         );
 
         if (gamepad1.a) {
-          //claw.open() // servo.setPosition(whatever open means)
+          claw.release()
         }
         if (gamepad1.b) {
-          //
+          claw.open() //temporary
         }
 
         if (gamepad1.x) {

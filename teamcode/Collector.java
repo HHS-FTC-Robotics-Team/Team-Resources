@@ -44,13 +44,13 @@ public Collector extends LinearOpMode {
   }
 
 
-  public void in(); {
+  public void in() {
     Lmtr.setPower(1);
     Rmtr.setPower(1);
   }
 
 
-  public void out(); {
+  public void out() {
     Lmtr.setPower(-1);
     Rmtr.setPower(-1);
   }

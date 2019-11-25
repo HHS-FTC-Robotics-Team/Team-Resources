@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Drive;
 import org.firstinspires.ftc.teamcode.SciLift;
 import org.firstinspires.ftc.teamcode.Arm;
 import org.firstinspires.ftc.teamcode.Collector;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 //import claw class
 

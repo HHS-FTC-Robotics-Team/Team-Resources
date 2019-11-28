@@ -36,9 +36,9 @@ import org.firstinspires.ftc.teamcode.Find;
 import org.firstinspires.ftc.teamcode.Collect;
 
 class Gpsbrain extends LinearOpMode {
-  
+
   String state = "turn";
-  
+
   Drive d = null;
   double x = 0;
   double y = 0;
@@ -47,19 +47,21 @@ class Gpsbrain extends LinearOpMode {
   double theta = 0;
   double dtheta = 0;
   double travelled = 0;
-  
+  double goalclicks = null;
+  double startclicks = null;
+
   private BNO055IMU imu = null;
   private Orientation lastAngles = new Orientation();
   private double globalAngle, power = 0.30, correction;
-  
-  
+
+
   Collect collect = null;
   Find f = null;
-  
+
   public Gpsbrain(Drive drive, BNO055IMU acc, Collect c, Find find) {
       d = drive;
       BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        
+
         parameters.mode                = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -69,7 +71,7 @@ class Gpsbrain extends LinearOpMode {
       collect = c;
       f = find;
   }
- 
+
   public void update() {
     if(state == "rest") {
       // nothing
@@ -78,8 +80,12 @@ class Gpsbrain extends LinearOpMode {
     if(state == "turn") {
       this.turn();
     }
+    if(state == "forward"){
+      this.forward();
+
+    }
   }
-  
+
   public void turn() {
       theta = getAngle();
       telemetry.addData("Angle: ", theta);
@@ -89,50 +95,62 @@ class Gpsbrain extends LinearOpMode {
         state = "rest";
       }
   }
-  
-  
   public void turn(double degrees){
       dtheta = theta + degrees;
       state = "turn";
   }
-  
+
+  public void forward(){
+    int current = d.getClickslf();
+    if(current < goalclicks) {
+      d.setPower(1,0,0);
+    } else {
+      state = "rest";
+    }
+  }
+  public void forward(double clicks){
+   startclicks = d.getClickslf(); // where the encoder starts
+   goalclicks = startclicks + clicks; // how far to go
+   state = "forward";
+  }
+
   public void drive(){
     double h =   Math.sqrt((x-dx)*(x-dx)- (y-dy)*(y-dy));
-  
+
     if (travelled < h){
     d.setPower(1,1,1);
-    
+    leftFront.getCurrentPosition();
     } else {
-    
+
     d.setPower(0,0,0);
     state = "rest";
-    
+
     }
-    
+
   }
-  
+
   public void seek(){
-    
+
     // if(f.countSkystones() > 0) {
     //   double angle = f.getSkystoneAngle();
     //   if(angle == 0) {
     //     turn(angle);
     //   }
     // }
-    
+
     // if(f.getDistance() < 200) {
     //   collect.in();
     // } else {
     //   collect.out();
     // }
-    
+
     // if(f.getBlock()) {
     //   state = "rest";
     // }
-    
+
   }
-  
-  
+
+
   public double getAngle() {
     // We experimentally determined the Z axis is the axis we want to use for heading angle.
     // We have to process the angle because the imu works in euler angles so the Z axis is
@@ -154,8 +172,9 @@ class Gpsbrain extends LinearOpMode {
 
     return globalAngle;
   }
-    
+
   public void runOpMode() {
-    
+
   }
+
 }

@@ -8,25 +8,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 public class Arm extends LinearOpMode {
-  
+
   private int position;
   private int max = 2000;
   private int min = 0;
   private DcMotor motor = null;
   private DigitalChannel touch;
   public String state = "rest";
-  
-  
+
+
   public Arm(DcMotor mtr, DigitalChannel t) {
     motor = mtr;
     motor.setDirection(DcMotor.Direction.FORWARD);
-    
+
     touch = t;
     touch.setMode(DigitalChannel.Mode.INPUT);
-    
+
     position = motor.getCurrentPosition();
   }
-  
+
 //  public void update() {
 //    if(state == "rest") {
 //      telemetry.addData("Lift Status:", state)
@@ -34,40 +34,54 @@ public class Arm extends LinearOpMode {
 //      this.down();
 //    }
 //  }
-  
+
+
+  public void retract(double power) {
+    position = motor.getCurrentPosition();
+
+    motor.setPower(0.3 * power);
+
+    // kill the motor if the touch sensor gets pressed
+  }
+
   public void retract() {
     position = motor.getCurrentPosition();
-    
+
     motor.setPower(0.3);
-    
+
     // kill the motor if the touch sensor gets pressed
   }
-  
+
   public void extend(double power) {
     position = motor.getCurrentPosition();
-    
+
     motor.setPower(-0.3 * power);
-    
+
     // kill the motor if the touch sensor gets pressed
   }
-  
+
+  public void extend() {
+    position = motor.getCurrentPosition();
+    motor.setPower(-0.3);
+  }
+
   public void rest() {
     position = motor.getCurrentPosition();
-    
+
     motor.setPower(0);
-    
+
     // kill the motor if the touch sensor gets pressed
   }
-  
+
   public double getPower() {
     double p = motor.getPower();
     return p;
   }
-  
+
   // public void setState(int state) {
   //   return position;
   // }
-  
+
   public void runOpMode() {
   }
 }

@@ -33,6 +33,10 @@ public class Drive extends LinearOpMode {
     powerrb = 0;
     motorrb = rb;
     motorrb.setDirection(DcMotor.Direction.REVERSE);
+    
+    motorlf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    motorlf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+      
   }
 
   public void setPower(double Ly, double Lx, double Rx, double Trigger) {
@@ -69,6 +73,10 @@ public class Drive extends LinearOpMode {
     double lf = motorlf.getPower();
 
     return powerlf;
+  }
+
+  public double getClickslf() {
+    return motorlf.getCurrentPosition();
   }
 
   public double getPowerlb() {

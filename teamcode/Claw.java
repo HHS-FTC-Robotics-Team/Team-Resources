@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public Claw extends LinearOpMode {
+public class Claw extends LinearOpMode {
 
   private Servo servo = null;
   private double increment = 0.01; // amount to slew servo each CYCLE_MS cycle
@@ -15,18 +15,19 @@ public Claw extends LinearOpMode {
   private double max_pos = .82; // Maximum rotational position
   private double min_pos = .17; // Minimum rotational position
   private double current_pos = 0.5;
-  private double current_pos = 0.5;
+  private DistanceSensor dist = null;
+  
 
-  public Claw (Servo s, DistanceSensor ds) {
+  public Claw (Servo s/*, DistanceSensor ds*/) {
     servo = s;
-    dist = ds;
+    //dist = ds;
   }
 
   public void grab() {
-    servo.setPosition(min);
+    servo.setPosition(min_pos);
   }
   public void release() {
-    servo.setPosition(max);
+    servo.setPosition(max_pos);
   }
 
   public void update() { // might not need
@@ -43,7 +44,7 @@ public Claw extends LinearOpMode {
     //   }
     // }
 
-    if dist.getDistance(DistanceUnit.MM) < 200 {
+    if(dist.getDistance(DistanceUnit.MM) < 200) {
       this.grab();
     }
   }
@@ -58,4 +59,7 @@ public Claw extends LinearOpMode {
     return current_pos;
   }
 
+  public void runOpMode() {
+    
+  }
 }

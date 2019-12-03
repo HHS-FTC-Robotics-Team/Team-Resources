@@ -19,7 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.teamcode.Collector;
+import java.util.stream.Collector;
+import org.firstinspires.ftc.teamcode.Collect;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -57,7 +58,7 @@ public class Gpsbrain extends LinearOpMode {
   private double globalAngle, power = 0.30, correction;
 
 
-  Collector collect = null;
+  Collect collect = null;
   Find f = null;
 
   public Gpsbrain(Drive drive, BNO055IMU acc, Collect c, Find find) {

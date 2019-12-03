@@ -26,20 +26,28 @@ public class Drive extends LinearOpMode {
     motorlf.setDirection(DcMotor.Direction.FORWARD);
     powerlb = 0;
     motorlb = lb;
-    motorlb.setDirection(DcMotor.Direction.REVERSE);
+    motorlb.setDirection(DcMotor.Direction.FORWARD);
     powerrf = 0;
     motorrf = rf;
-    motorrf.setDirection(DcMotor.Direction.FORWARD);
+    motorrf.setDirection(DcMotor.Direction.REVERSE);
     powerrb = 0;
     motorrb = rb;
     motorrb.setDirection(DcMotor.Direction.REVERSE);
   }
 
-  public void setPower(double Ly, double Lx, double Rx) {
+  public void setPower(double Ly, double Lx, double Rx, double Trigger) {
     double leftfront = (Ly - Lx + Rx)/3;
     double leftback = (Ly + Lx + Rx)/3;
-    double rightfront = (Ly + Lx - Rx)/3;
-    double rightback = (Ly - Lx - Rx)/3;
+    double rightfront = (Ly - Lx - Rx)/3;
+    double rightback = (Ly + Lx - Rx)/3;
+    if (Trigger > 0) {
+      double max = findMax(leftfront,leftback,rightfront,rightback);
+      max = max / Trigger;
+      leftfront = leftfront / max;
+      leftback = leftback / max;
+      rightfront = rightfront / max;
+      rightback = rightback / max;
+    }
     powerlf = leftfront;
     motorlf.setPower(leftfront);
     powerlb = leftback;
@@ -50,38 +58,54 @@ public class Drive extends LinearOpMode {
     motorrb.setPower(rightback);
   }
 
-  public void setPower(double lf, double lb, double rf, double rb) {
-    motorlf.setPower(lf);
-    motorlb.setPower(lb);
-    motorrf.setPower(rf);
-    motorrb.setPower(rb);
-  }
+  // public void setPower(double lf, double lb, double rf, double rb) {
+  //   motorlf.setPower(lf);
+  //   motorlb.setPower(lb);
+  //   motorrf.setPower(rf);
+  //   motorrb.setPower(rb);
+  // }
 
   public double getPowerlf() {
     double lf = motorlf.getPower();
-    
+
     return powerlf;
   }
-  
+
   public double getPowerlb() {
     double lb = motorlb.getPower();
-    
+
     return powerlb;
   }
-  
+
   public double getPowerrf() {
-    double rf = motorlrf.getPower();
-    
+    double rf = motorrf.getPower();
+
     return powerrf;
   }
-  
+
   public double getPowerrb() {
     double rb = motorrb.getPower();
-    
+
     return powerrb;
   }
-  
 
+  public double findMax(double lf,double lb,double rf,double rb) {
+    if (lf >= lb && lf >= rf && lf >= rb) {
+      return lf;
+    }
+    else if (lb >= lf && lb >= rf && lb >= rb) {
+      return lb;
+    }
+    else if (rf >= lf && rf >= lb && rf >= rb) {
+      return rf;
+    }
+    else if (rb >= lf && rb >= lb && rb >= rf) {
+      return rb;
+    }
+    else {
+      return 1;
+    }
+  }
 
 
   public void runOpMode() {

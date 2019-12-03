@@ -19,9 +19,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.Collector;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import java.util.stream.Collector;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -33,11 +35,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Drive;
 import org.firstinspires.ftc.teamcode.Find;
-import org.firstinspires.ftc.teamcode.Collect;
 
-class Gpsbrain extends LinearOpMode {
 
-  String state = "turn";
+public class Gpsbrain extends LinearOpMode {
+
+  public String state = "rest";
 
   Drive d = null;
   double x = 0;
@@ -47,15 +49,15 @@ class Gpsbrain extends LinearOpMode {
   double theta = 0;
   double dtheta = 0;
   double travelled = 0;
-  double goalclicks = null;
-  double startclicks = null;
+  double goalclicks = 0;
+  double startclicks = 0;
 
   private BNO055IMU imu = null;
   private Orientation lastAngles = new Orientation();
   private double globalAngle, power = 0.30, correction;
 
 
-  Collect collect = null;
+  Collector collect = null;
   Find f = null;
 
   public Gpsbrain(Drive drive, BNO055IMU acc, Collect c, Find find) {
@@ -75,14 +77,30 @@ class Gpsbrain extends LinearOpMode {
   public void update() {
     if(state == "rest") {
       // nothing
-      d.setPower(0, 0, 0);
+      d.setPower(0, 0, 0, 0.3);
     }
     if(state == "turn") {
       this.turn();
     }
     if(state == "forward"){
       this.forward();
-
+    }
+    if(state == "strafeLeft"){
+      this.strafeLeft();
+    }
+    if(state == "strafeRight"){
+      this.strafeRight();
+    }
+    if(state == "strafeRight"){
+      this.seek();
+    }
+    if(state == "seek") {
+      double angle = f.findSkystoneAngle();
+      if(angle > 0) {
+        this.strafeRight(300);
+      } else if(angle < 0) {
+        this.strafeLeft(300);
+      }
     }
   }
 
@@ -90,7 +108,7 @@ class Gpsbrain extends LinearOpMode {
       theta = getAngle();
       telemetry.addData("Angle: ", theta);
       telemetry.addData("Look", "Here");
-      d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) );
+      d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) , 0.3);
       if(Math.abs(theta - dtheta) < 2) {
         state = "rest";
       }
@@ -101,42 +119,70 @@ class Gpsbrain extends LinearOpMode {
   }
 
   public void forward(){
-    int current = d.getClickslf();
+    double current = d.getClickslf();
     if(current < goalclicks) {
-      d.setPower(1,0,0);
+      d.setPower(1,0,0,0.3);
     } else {
       state = "rest";
     }
   }
+
   public void forward(double clicks){
    startclicks = d.getClickslf(); // where the encoder starts
    goalclicks = startclicks + clicks; // how far to go
    state = "forward";
   }
+  public void strafeLeft(double clicks){
+   startclicks = d.getClickslf(); // where the encoder starts
+   goalclicks = startclicks - clicks; // how far to go
+   state = "strafeLeft";
+  }
+  public void strafeRight(double clicks){
+   startclicks = d.getClickslf(); // where the encoder starts
+   goalclicks = startclicks + clicks; // how far to go
+   state = "strafeRight";
+  }
+
+
+  public void strafeLeft(){
+    double current = d.getClickslf();
+    if(current > goalclicks) {
+     d.setPower(0,-1,0,0.3);
+    } else {
+     d.setPower(0,0,0,0.3);
+     state = "rest";
+    }
+  }
+  public void strafeRight() {
+    double current = d.getClickslf();
+    if(current < goalclicks){
+      d.setPower(0,1,0,0.3);
+    } else {
+      d.setPower(0,0,0,0.3);
+      state = "rest";
+    }
+  }
 
   public void drive(){
     double h =   Math.sqrt((x-dx)*(x-dx)- (y-dy)*(y-dy));
-
     if (travelled < h){
-    d.setPower(1,1,1);
-    leftFront.getCurrentPosition();
+      d.setPower(1,1,1,0.3);
+      d.motorlf.getCurrentPosition();
     } else {
-
-    d.setPower(0,0,0);
-    state = "rest";
-
+      d.setPower(0,0,0,0.3);
+      state = "rest";
     }
-
   }
+
 
   public void seek(){
 
-    // if(f.countSkystones() > 0) {
-    //   double angle = f.getSkystoneAngle();
-    //   if(angle == 0) {
-    //     turn(angle);
-    //   }
-    // }
+    if(f.countSkystones() > 0) {
+      double angle = f.findSkystoneAngle();
+      if(angle == 0) {
+        this.turn(angle);
+      }
+    }
 
     // if(f.getDistance() < 200) {
     //   collect.in();

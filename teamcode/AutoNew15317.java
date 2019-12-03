@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import java.util.stream.Collector;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -11,18 +12,18 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import org.firstinspires.ftc.teamcode.Drive;
 import org.firstinspires.ftc.teamcode.SciLift;
 import org.firstinspires.ftc.teamcode.Arm;
-import org.firstinspires.ftc.teamcode.Collector;
+import org.firstinspires.ftc.teamcode.Collect;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.teamcode.Claw;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="15317 Teleop", group="Linear Opmode")
 
-public class Teleop1776 extends LinearOpMode {
+public class Teleop15317 extends LinearOpMode {
 
     private Drive d;
     private SciLift lift;
-    private Collector collector;
+    private Collect collector;
     private Claw claw;
     private Arm arm;
 
@@ -30,10 +31,10 @@ public class Teleop1776 extends LinearOpMode {
     public void runOpMode() {
 
       d = new Drive(
-          hardwareMap.get(DcMotor.class, "right_back"),
-          hardwareMap.get(DcMotor.class, "right_front"),
-          hardwareMap.get(DcMotor.class, "left_front"),
-          hardwareMap.get(DcMotor.class, "left_back")
+          hardwareMap.get(DcMotor.class, "rbmotor"),
+          hardwareMap.get(DcMotor.class, "rfmotor"),
+          hardwareMap.get(DcMotor.class, "lfmotor"),
+          hardwareMap.get(DcMotor.class, "lbmotor")
       );
       lift = new SciLift(
         hardwareMap.get(DcMotor.class, "liftmotor")
@@ -42,13 +43,13 @@ public class Teleop1776 extends LinearOpMode {
         hardwareMap.get(DcMotor.class, "armmotor"),
         hardwareMap.get(DigitalChannel.class, "armtouch")
       );
-      collector = new Collector(
+      collector = new Collect(
         hardwareMap.get(DcMotor.class, "col_left"),
         hardwareMap.get(DcMotor.class, "col_right"),
         hardwareMap.get(DistanceSensor.class, "col_sensor")
       );
       claw = new Claw(
-        hardwareMap.get(Servo.class, "claw");
+        hardwareMap.get(Servo.class, "claw")
       );
 
       waitForStart();
@@ -58,25 +59,27 @@ public class Teleop1776 extends LinearOpMode {
 
         // gamepad 1
         d.setPower(
-          gamepad1.right_stick_y;,
-          -gamepad1.right_stick_x;,
-          -gamepad1.left_stick_x;
+          -gamepad1.right_stick_y,
+          gamepad1.right_stick_x,
+          gamepad1.left_stick_x,
+          gamepad1.right_trigger
         );
         if (gamepad1.x) {
-          grab.in();
+          collector.in();
         } else if (gamepad1.y) {
-          grab.out();
+          collector.out();
         } else {
-          grab.rest();
+          collector.rest();
         }
 
         //gamepad 2
         if (gamepad2.b) {
-          claw.release()
+          claw.release();
         }
         if (gamepad2.a) {
-          claw.grab()
+          claw.grab();
         }
+
         // if (gamepad2.y) {
         //   foundation.release()
         // }
@@ -101,11 +104,11 @@ public class Teleop1776 extends LinearOpMode {
         }
 
         telemetry.addData("Status", "Run Time: ");
-        telemetry.addData("Lift Power", lift.getPower());
-        telemetry.addData("Arm Power", arm.getPower());
-        // telemetry.addData("Armposition")
-        telemetry.addData("Collect Power", collect.getPower());
-        telemetry.addData("Collect Dist", collect.getDistance());
+        // telemetry.addData("Lift Power", lift.getPower());
+        // telemetry.addData("Arm Power", arm.getPower());
+        // // telemetry.addData("Armposition")
+        telemetry.addData("Collect Power", collector.getPower());
+        telemetry.addData("Collect Dist", collector.getDistance());
         telemetry.addData("Ly", gamepad1.left_stick_y);
         telemetry.addData("Lx", gamepad1.left_stick_x);
         telemetry.addData("Rx", gamepad1.right_stick_x);

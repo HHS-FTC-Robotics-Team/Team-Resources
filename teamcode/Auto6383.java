@@ -42,7 +42,7 @@ public class Teleop1776 extends LinearOpMode {
         hardwareMap.get(DigitalChannel.class, "armtouch")
       );
       claw = new Claw(
-        hardwareMap.get(Servo.class, "claw");
+        hardwareMap.get(Servo.class, "claw")
       );
 
       waitForStart();

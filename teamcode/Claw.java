@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public Claw extends LinearOpMode {
 
@@ -15,8 +17,9 @@ public Claw extends LinearOpMode {
   private double current_pos = 0.5;
   private double current_pos = 0.5;
 
-  public Claw (Servo s) {
+  public Claw (Servo s, DistanceSensor ds) {
     servo = s;
+    dist = ds;
   }
 
   public void grab() {
@@ -39,6 +42,10 @@ public Claw extends LinearOpMode {
     //     position = min_pos;
     //   }
     // }
+
+    if dist.getDistance(DistanceUnit.MM) < 200 {
+      this.grab();
+    }
   }
 
 

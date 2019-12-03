@@ -46,11 +46,11 @@ public class Autonomous15317 extends LinearOpMode {
     public void runOpMode() {
 
         d = new Drive(
-            hardwareMap.get(DcMotor.class, "lfmotor"),
-            hardwareMap.get(DcMotor.class, "lbmotor"),
-            hardwareMap.get(DcMotor.class, "rfmotor"),
-            hardwareMap.get(DcMotor.class, "rbmotor")
-        );
+          hardwareMap.get(DcMotor.class, "rbmotor"),
+          hardwareMap.get(DcMotor.class, "rfmotor"),
+          hardwareMap.get(DcMotor.class, "lfmotor"),
+          hardwareMap.get(DcMotor.class, "lbmotor")
+      );
 
         // c = new Collect(
         // );

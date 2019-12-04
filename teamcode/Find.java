@@ -55,7 +55,7 @@ public class Find extends LinearOpMode {
       "", // vuforiaLicenseKey
       VuforiaLocalizer.CameraDirection.BACK, // cameraDirection
       false, // useExtendedTracking
-      true, // enableCameraMonitoring
+      false, // enableCameraMonitoring
       VuforiaLocalizer.Parameters.CameraMonitorFeedback.AXES, // cameraMonitorFeedback
       0, // dx
       0, // dy
@@ -69,7 +69,7 @@ public class Find extends LinearOpMode {
     //telemetry.update();
     // Let's use 70% minimum confidence and
     // and no object tracker.
-    tfodSkyStone.initialize(vuforiaSkyStone, 0.7F, false, true);
+    tfodSkyStone.initialize(vuforiaSkyStone, 0.7F, false, false);
     //telemetry.addData(">", "Press Play to start");
     //telemetry.update();
     // Set target ratio of object height to image
@@ -92,25 +92,10 @@ public class Find extends LinearOpMode {
   
   public double findSkystoneAngle() {
     recognitions = tfodSkyStone.getRecognitions();
-    // Report number of recognitions.
-    //telemetry.addData("Objects Recognized", recognitions.size());
-    // If some objects detected...
     if (recognitions.size() > 0) {
-      // ...let's count how many are gold.
-      SkystoneCount = 0;
-      // Step through the stones detected.
       for (Recognition recognition : recognitions) {
         if (recognition.getLabel().equals("Skystone")) {
-          // A Skystone has been detected.
-          SkystoneCount = SkystoneCount + 1;
-          // We can assume this is the first Skystone
-          // because we break out of this loop below after
-          // using the information from the first Skystone.
-          // We don't need to calculate turn angle to Skystone
-          // because TensorFlow has estimated it for us.
           ObjectAngle = recognition.estimateAngleToObject(AngleUnit.DEGREES);
-          // Negative angle means Skystone is left, else right.
-          //telemetry.addData("Estimated Angle", ObjectAngle);
           return ObjectAngle;
         }
       }

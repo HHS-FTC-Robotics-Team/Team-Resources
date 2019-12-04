@@ -9,25 +9,30 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Claw extends LinearOpMode {
 
-  private Servo servo = null;
+  private Servo left = null;
+  private Servo right = null;
   private double increment = 0.01; // amount to slew servo each CYCLE_MS cycle
   private int cycle_ms = 50; // period of each cycle
-  private double max_pos = .82; // Maximum rotational position
-  private double min_pos = .17; // Minimum rotational position
+  private double max_pos = 1.0; // Maximum rotational position
+  private double min_pos = 0.75; // Minimum rotational position
+  private double max_right_pos = .0; // Maximum rotational position
+  private double min_right_pos = .25; // Minimum rotational position
   private double current_pos = 0.5;
   private DistanceSensor dist = null;
   
 
-  public Claw (Servo s/*, DistanceSensor ds*/) {
-    servo = s;
-    //dist = ds;
+  public Claw (Servo s, Servo s2) {
+    left = s;
+    right = s2;
   }
 
   public void grab() {
-    servo.setPosition(min_pos);
+    left.setPosition(min_pos);
+    right.setPosition(min_right_pos);
   }
   public void release() {
-    servo.setPosition(max_pos);
+    left.setPosition(max_pos);
+    right.setPosition(max_right_pos);
   }
 
   public void update() { // might not need
@@ -44,9 +49,9 @@ public class Claw extends LinearOpMode {
     //   }
     // }
 
-    if(dist.getDistance(DistanceUnit.MM) < 200) {
-      this.grab();
-    }
+    // if(dist.getDistance(DistanceUnit.MM) < 200) {
+    //   this.grab();
+    // }
   }
 
 
@@ -55,9 +60,9 @@ public class Claw extends LinearOpMode {
   // private void scaleRange(double min, double max)
 
 
-  public double getPos() {
-    return current_pos;
-  }
+  // public double getPos() {
+  //   return current_pos;
+  // }
 
   public void runOpMode() {
     

@@ -43,7 +43,7 @@ public class SciLift extends LinearOpMode {
   public void down(float power) {
     position = motor.getCurrentPosition();
 
-    motor.setPower(0.3 * power);
+    motor.setPower(0.6 * power);
 
     // kill the motor if the touch sensor gets pressed
   }
@@ -59,7 +59,7 @@ public class SciLift extends LinearOpMode {
   public void up(float power) {
     position = motor.getCurrentPosition();
 
-    motor.setPower(-0.6 * power);
+    motor.setPower(-1 * power);
 
     // kill the motor if the touch sensor gets pressed
   }

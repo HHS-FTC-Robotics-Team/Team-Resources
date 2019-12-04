@@ -49,7 +49,8 @@ public class Teleop15317 extends LinearOpMode {
         //hardwareMap.get(DistanceSensor.class, "col_sensor")
       );
       claw = new Claw(
-        hardwareMap.get(Servo.class, "claw")
+        hardwareMap.get(Servo.class, "clawleft"),
+        hardwareMap.get(Servo.class, "clawright")
       );
 
       waitForStart();

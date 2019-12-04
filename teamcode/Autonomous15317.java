@@ -75,7 +75,9 @@ public class Autonomous15317 extends LinearOpMode {
             gps.update();
             
             telemetry.addData("State", gps.state);
-            telemetry.addData("clicks", d.getClickslf());
+            //telemetry.addData("clicks", d.getClickslf());
+            // double angle = gps.find();
+            // telemetry.addData("Angle: ", angle);
             telemetry.update();
 
         }

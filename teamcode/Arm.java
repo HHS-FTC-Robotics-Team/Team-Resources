@@ -47,7 +47,7 @@ public class Arm extends LinearOpMode {
   public void retract() {
     position = motor.getCurrentPosition();
 
-    motor.setPower(0.3);
+    motor.setPower(1);
 
     // kill the motor if the touch sensor gets pressed
   }
@@ -62,7 +62,7 @@ public class Arm extends LinearOpMode {
 
   public void extend() {
     position = motor.getCurrentPosition();
-    motor.setPower(-0.3);
+    motor.setPower(-1);
   }
 
   public void rest() {

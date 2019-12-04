@@ -78,7 +78,7 @@ public class Gpsbrain extends LinearOpMode {
   public void update() {
     if(state == "rest") {
       // nothing
-      d.setPower(0, 0, 0, 0.3);
+      d.setPower(0, 0, 0, 0);
     }
     if(state == "turn") {
       this.turn();
@@ -96,12 +96,17 @@ public class Gpsbrain extends LinearOpMode {
       this.seek();
     }
     if(state == "seek") {
+      // d.setPower(0, 0, 0, 0);
       double angle = f.findSkystoneAngle();
-      if(angle > 0) {
-        this.strafeRight(300);
-      } else if(angle < 0) {
-        this.strafeLeft(300);
+      if(angle > 1) {
+        d.setPower(0, 1*angle/15, 0, 0);
+      } else if(angle < -1) {
+        d.setPower(0, 1*angle/15, 0, 0);
+      } else if(angle < 1 && angle > -1) {
+        state = "rest";
       }
+      // d.setPower(0, -1, 0, 0);
+      
     }
   }
 
@@ -109,7 +114,7 @@ public class Gpsbrain extends LinearOpMode {
       theta = getAngle();
       telemetry.addData("Angle: ", theta);
       telemetry.addData("Look", "Here");
-      d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) , 0.3);
+      d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) , 0);
       if(Math.abs(theta - dtheta) < 2) {
         state = "rest";
       }
@@ -122,7 +127,7 @@ public class Gpsbrain extends LinearOpMode {
   public void forward(){
     double current = d.getClickslf();
     if(current < goalclicks) {
-      d.setPower(1,0,0,0.3);
+      d.setPower(1,0,0,0);
     } else {
       state = "rest";
     }
@@ -148,18 +153,18 @@ public class Gpsbrain extends LinearOpMode {
   public void strafeLeft(){
     double current = d.getClickslf();
     if(current > goalclicks) {
-     d.setPower(0,-1,0,0.3);
+     d.setPower(0,-1,0,0);
     } else {
-     d.setPower(0,0,0,0.3);
+     d.setPower(0,0,0,0);
      state = "rest";
     }
   }
   public void strafeRight() {
     double current = d.getClickslf();
     if(current < goalclicks){
-      d.setPower(0,1,0,0.3);
+      d.setPower(0,1,0,0);
     } else {
-      d.setPower(0,0,0,0.3);
+      d.setPower(0,0,0,0);
       state = "rest";
     }
   }
@@ -167,10 +172,10 @@ public class Gpsbrain extends LinearOpMode {
   public void drive(){
     double h =   Math.sqrt((x-dx)*(x-dx)- (y-dy)*(y-dy));
     if (travelled < h){
-      d.setPower(1,1,1,0.3);
+      d.setPower(1,1,1,0);
       d.motorlf.getCurrentPosition();
     } else {
-      d.setPower(0,0,0,0.3);
+      d.setPower(0,0,0,0);
       state = "rest";
     }
   }
@@ -184,6 +189,8 @@ public class Gpsbrain extends LinearOpMode {
         this.turn(angle);
       }
     }
+    
+    
 
     // if(f.getDistance() < 200) {
     //   collect.in();
@@ -196,6 +203,11 @@ public class Gpsbrain extends LinearOpMode {
     // }
 
   }
+  
+  public double find() {
+      double angle = f.findSkystoneAngle();
+      return angle;
+    }
 
 
   public double getAngle() {

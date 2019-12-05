@@ -14,30 +14,30 @@ public class Collect extends LinearOpMode {
   private DcMotor Rmtr = null;
   private DistanceSensor dist = null;
 
-  public Collect (DcMotor l, DcMotor r) {
+  public Collect (DcMotor l, DcMotor r, DistanceSensor d) {
     Lmtr = l;
     Rmtr = r;
     Lmtr.setDirection(DcMotor.Direction.FORWARD);
     Rmtr.setDirection(DcMotor.Direction.REVERSE);
-    //dist = d;
+    dist = d;
 
   }
 
-  // public double getDistance() {
-  //   double distance = dist.getDistance(DistanceUnit.MM);
-  //   return distance;
-  // }
+  public double getDistance() {
+    double distance = dist.getDistance(DistanceUnit.MM);
+    return distance;
+  }
 
   public boolean getBlock() {
-    // boolean gotBlock;
+    boolean gotBlock;
 
-    // if(c.getDistance() < 5) {
-    //   gotBlock = true;
-    // } else {
-    //   gotBlock = false;
-    // }
+    if(this.getDistance() < 5) {
+      gotBlock = true;
+    } else {
+      gotBlock = false;
+    }
 
-    return false;
+    return gotBlock;
   }
 
 
@@ -74,6 +74,6 @@ public class Collect extends LinearOpMode {
 
   }
   public void runOpMode() {
-    
+
   }
 }

@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import java.util.stream.Collector;
+import java.util.stream.Collector; //DISGUSTING
 import org.firstinspires.ftc.teamcode.Collect;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -75,6 +75,68 @@ public class Gpsbrain extends LinearOpMode {
       f = find;
   }
 
+
+  public void AutoSkystone() {
+    private double initForward = 1000 //clicks forward at the start
+    private double turn180 = 180 //degrees to flip around 180
+    private double collectorGrabSpeed = 1 //speed of collector when grabbing
+    private double distSensorCheck = 5 //how low the dist sensor should read to count as collected (if needed?)
+    private double distStrafeLeft = 10000 //how far to go to reach build zone
+    private double dropTurn = -45 //degrees to turn before dropping stone
+    private double collectorDropSpeed = -1 //speed of collector when dropping
+
+    private double
+
+    this.forward(initForward)
+    state = "seek"
+
+    collect.in()
+    this.forward(low power) until distsensor < distSensorCheck
+    //record distance travelled = distToBrick
+    //make new forward function?
+    collect.rest()
+
+    this.reverse(distToBrick)
+    this.strafeLeft(distStrafeLeft)
+    this.turn(dropTurn)
+
+    collect.out()
+    //or
+    claw.grab
+    arm.extend(amt)
+    clas.release
+
+    //==========================
+    states
+    "forward"
+    "seek"
+    collect.in ///////
+    "forward"       //   > state "collect"
+    c.getDistance() //
+    collect.rest // //
+    "reverse"
+    "strafeLeft"
+    "turn"
+    collect.out
+
+    //questions
+    how will we specify amount to move
+    how to go from state to state
+    will we need something different to pick up the block
+    how will we drop the block
+  }
+
+  public void collectStone() {
+    collect.in ///////
+    "forward"       //   > state "collect"
+    c.getDistance() //
+    collect.rest /////
+
+    
+    c.in()
+
+  }
+
   public void update() {
     if(state == "rest") {
       // nothing
@@ -106,7 +168,7 @@ public class Gpsbrain extends LinearOpMode {
         state = "rest";
       }
       // d.setPower(0, -1, 0, 0);
-      
+
     }
   }
 
@@ -189,8 +251,8 @@ public class Gpsbrain extends LinearOpMode {
         this.turn(angle);
       }
     }
-    
-    
+
+
 
     // if(f.getDistance() < 200) {
     //   collect.in();
@@ -203,7 +265,7 @@ public class Gpsbrain extends LinearOpMode {
     // }
 
   }
-  
+
   public double find() {
       double angle = f.findSkystoneAngle();
       return angle;

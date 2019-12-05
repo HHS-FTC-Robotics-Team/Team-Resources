@@ -53,6 +53,10 @@ public class Gpsbrain extends LinearOpMode {
   double goalclicks = 0;
   double startclicks = 0;
 
+  private Array states["forward", "rest"];
+  private int count = 0;
+  private double arg = 300;
+
   private BNO055IMU imu = null;
   private Orientation lastAngles = new Orientation();
   private double globalAngle, power = 0.30, correction;
@@ -84,8 +88,6 @@ public class Gpsbrain extends LinearOpMode {
     private double distStrafeLeft = 10000 //how far to go to reach build zone
     private double dropTurn = -45 //degrees to turn before dropping stone
     private double collectorDropSpeed = -1 //speed of collector when dropping
-
-    private double
 
     this.forward(initForward)
     state = "seek"
@@ -124,6 +126,12 @@ public class Gpsbrain extends LinearOpMode {
     how to go from state to state
     will we need something different to pick up the block
     how will we drop the block
+
+
+
+
+
+    // private Array states["forward", "rest"]
   }
 
   public void collectStone() {
@@ -132,7 +140,7 @@ public class Gpsbrain extends LinearOpMode {
     c.getDistance() //
     collect.rest /////
 
-    
+
     c.in()
 
   }
@@ -145,7 +153,11 @@ public class Gpsbrain extends LinearOpMode {
     if(state == "turn") {
       this.turn();
     }
-    if(state == "forward"){
+    if(states[count] == "forward"){
+      if (arg) {
+        this.forward(arg);
+        arg = null;
+      }
       this.forward();
     }
     if(state == "strafeLeft"){
@@ -165,21 +177,30 @@ public class Gpsbrain extends LinearOpMode {
       } else if(angle < -1) {
         d.setPower(0, 1*angle/15, 0, 0);
       } else if(angle < 1 && angle > -1) {
-        state = "rest";
+        pop();
       }
       // d.setPower(0, -1, 0, 0);
 
     }
   }
 
+  public void pop() {
+    count = count + 1;
+  }
+
+  public void pop(double argument) {
+    arg = argument;
+    count = count + 1;
+  }
+
   public void turn() {
       theta = getAngle();
       telemetry.addData("Angle: ", theta);
       telemetry.addData("Look", "Here");
-      d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) , 0);
-      if(Math.abs(theta - dtheta) < 2) {
-        state = "rest";
-      }
+      // d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) , 0);
+      // if(Math.abs(theta - dtheta) < 2) {
+      //   state = "rest";
+      // }
   }
   public void turn(double degrees){
       dtheta = theta + degrees;
@@ -198,7 +219,6 @@ public class Gpsbrain extends LinearOpMode {
   public void forward(double clicks){
    startclicks = d.getClickslf(); // where the encoder starts
    goalclicks = startclicks + clicks; // how far to go
-   state = "forward";
   }
   public void strafeLeft(double clicks){
    startclicks = d.getClickslf(); // where the encoder starts
@@ -280,7 +300,7 @@ public class Gpsbrain extends LinearOpMode {
 
     Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-    double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+    double deltaAngle = angles.secondAngle - lastAngles.secondAngle;
 
     if (deltaAngle < -180)
         deltaAngle += 360;

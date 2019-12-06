@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="6383 Teleop", group="Linear Opmode")
 
-public class Teleop1776 extends LinearOpMode {
+public class Tele6383 extends LinearOpMode {
 
     private Drive d;
     private SciLift lift;

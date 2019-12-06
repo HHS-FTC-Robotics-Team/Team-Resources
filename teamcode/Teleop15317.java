@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.Drive;
 import org.firstinspires.ftc.teamcode.SciLift;
 import org.firstinspires.ftc.teamcode.Arm;
 import org.firstinspires.ftc.teamcode.Collect;
+import org.firstinspires.ftc.teamcode.Flick;
+import org.firstinspires.ftc.teamcode.Foundation;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.teamcode.Claw;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,6 +28,9 @@ public class Teleop15317 extends LinearOpMode {
     private Collect collector;
     private Claw claw;
     private Arm arm;
+    private Flick flick;
+    private Foundation foundation;
+
 
     @Override
     public void runOpMode() {
@@ -45,12 +50,18 @@ public class Teleop15317 extends LinearOpMode {
       );
       collector = new Collect(
         hardwareMap.get(DcMotor.class, "col_left"),
-        hardwareMap.get(DcMotor.class, "col_right")
-        //hardwareMap.get(DistanceSensor.class, "col_sensor")
+        hardwareMap.get(DcMotor.class, "col_right"),
+        hardwareMap.get(DistanceSensor.class, "dist")
       );
       claw = new Claw(
         hardwareMap.get(Servo.class, "clawleft"),
         hardwareMap.get(Servo.class, "clawright")
+      );
+      flick = new Flick(
+        hardwareMap.get(Servo.class, "flick")
+      );
+      foundation = new Foundation(
+        hardwareMap.get(Servo.class, "foundation")
       );
 
       waitForStart();
@@ -71,6 +82,18 @@ public class Teleop15317 extends LinearOpMode {
           collector.out();
         } else {
           collector.rest();
+        }
+        
+        if (gamepad1.a) {
+          flick.up();
+        } else {
+          flick.down();
+        }
+        
+        if (gamepad1.b) {
+          foundation.grab();
+        } else {
+          foundation.release();
         }
 
         //gamepad 2
@@ -109,6 +132,7 @@ public class Teleop15317 extends LinearOpMode {
         // telemetry.addData("Arm Power", arm.getPower());
         // // telemetry.addData("Armposition")
         telemetry.addData("Collect Power", collector.getPower());
+        telemetry.addData("Dist Sensor", collector.getDistance());
         //telemetry.addData("Collect Dist", collector.getDistance());
         telemetry.addData("Ly", gamepad1.left_stick_y);
         telemetry.addData("Lx", gamepad1.left_stick_x);

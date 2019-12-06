@@ -53,10 +53,6 @@ public class Gpsbrain extends LinearOpMode {
   double goalclicks = 0;
   double startclicks = 0;
 
-  private Array states["forward", "rest"];
-  private int count = 0;
-  private double arg = 300;
-
   private BNO055IMU imu = null;
   private Orientation lastAngles = new Orientation();
   private double globalAngle, power = 0.30, correction;
@@ -80,70 +76,66 @@ public class Gpsbrain extends LinearOpMode {
   }
 
 
-  public void AutoSkystone() {
-    private double initForward = 1000 //clicks forward at the start
-    private double turn180 = 180 //degrees to flip around 180
-    private double collectorGrabSpeed = 1 //speed of collector when grabbing
-    private double distSensorCheck = 5 //how low the dist sensor should read to count as collected (if needed?)
-    private double distStrafeLeft = 10000 //how far to go to reach build zone
-    private double dropTurn = -45 //degrees to turn before dropping stone
-    private double collectorDropSpeed = -1 //speed of collector when dropping
+  // public void AutoSkystone() {
+  //   private double initForward = 1000 //clicks forward at the start
+  //   private double turn180 = 180 //degrees to flip around 180
+  //   private double collectorGrabSpeed = 1 //speed of collector when grabbing
+  //   private double distSensorCheck = 5 //how low the dist sensor should read to count as collected (if needed?)
+  //   private double distStrafeLeft = 10000 //how far to go to reach build zone
+  //   private double dropTurn = -45 //degrees to turn before dropping stone
+  //   private double collectorDropSpeed = -1 //speed of collector when dropping
+  //
+  //   private double
+  //
+  //   this.forward(initForward)
+  //   state = "seek"
+  //
+  //   collect.in()
+  //   this.forward(low power) until distsensor < distSensorCheck
+  //   //record distance travelled = distToBrick
+  //   //make new forward function?
+  //   collect.rest()
+  //
+  //   this.reverse(distToBrick)
+  //   this.strafeLeft(distStrafeLeft)
+  //   this.turn(dropTurn)
+  //
+  //   collect.out()
+  //   //or
+  //   claw.grab
+  //   arm.extend(amt)
+  //   clas.release
+  //
+  //   //==========================
+  //   states
+  //   "forward"
+  //   "seek"
+  //   collect.in ///////
+  //   "forward"       //   > state "collect"
+  //   c.getDistance() //
+  //   collect.rest // //
+  //   "reverse"
+  //   "strafeLeft"
+  //   "turn"
+  //   collect.out
+  //
+  //   //questions
+  //   how will we specify amount to move
+  //   how to go from state to state
+  //   will we need something different to pick up the block
+  //   how will we drop the block
+  // }
 
-    this.forward(initForward)
-    state = "seek"
-
-    collect.in()
-    this.forward(low power) until distsensor < distSensorCheck
-    //record distance travelled = distToBrick
-    //make new forward function?
-    collect.rest()
-
-    this.reverse(distToBrick)
-    this.strafeLeft(distStrafeLeft)
-    this.turn(dropTurn)
-
-    collect.out()
-    //or
-    claw.grab
-    arm.extend(amt)
-    clas.release
-
-    //==========================
-    states
-    "forward"
-    "seek"
-    collect.in ///////
-    "forward"       //   > state "collect"
-    c.getDistance() //
-    collect.rest // //
-    "reverse"
-    "strafeLeft"
-    "turn"
-    collect.out
-
-    //questions
-    how will we specify amount to move
-    how to go from state to state
-    will we need something different to pick up the block
-    how will we drop the block
-
-
-
-
-
-    // private Array states["forward", "rest"]
-  }
-
-  public void collectStone() {
-    collect.in ///////
-    "forward"       //   > state "collect"
-    c.getDistance() //
-    collect.rest /////
+  // public void collectStone() {
+  //   collect.in ///////
+  //   "forward"       //   > state "collect"
+  //   c.getDistance() //
+  //   collect.rest /////
 
 
-    c.in()
+  //   c.in()
 
-  }
+  // }
 
   public void update() {
     if(state == "rest") {
@@ -153,11 +145,7 @@ public class Gpsbrain extends LinearOpMode {
     if(state == "turn") {
       this.turn();
     }
-    if(states[count] == "forward"){
-      if (arg) {
-        this.forward(arg);
-        arg = null;
-      }
+    if(state == "forward"){
       this.forward();
     }
     if(state == "strafeLeft"){
@@ -177,20 +165,11 @@ public class Gpsbrain extends LinearOpMode {
       } else if(angle < -1) {
         d.setPower(0, 1*angle/15, 0, 0);
       } else if(angle < 1 && angle > -1) {
-        pop();
+        state = "rest";
       }
       // d.setPower(0, -1, 0, 0);
 
     }
-  }
-
-  public void pop() {
-    count = count + 1;
-  }
-
-  public void pop(double argument) {
-    arg = argument;
-    count = count + 1;
   }
 
   public void turn() {
@@ -219,6 +198,7 @@ public class Gpsbrain extends LinearOpMode {
   public void forward(double clicks){
    startclicks = d.getClickslf(); // where the encoder starts
    goalclicks = startclicks + clicks; // how far to go
+   state = "forward";
   }
   public void strafeLeft(double clicks){
    startclicks = d.getClickslf(); // where the encoder starts

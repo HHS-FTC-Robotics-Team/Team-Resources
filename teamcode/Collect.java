@@ -31,7 +31,7 @@ public class Collect extends LinearOpMode {
   public boolean getBlock() {
     boolean gotBlock;
 
-    if(this.getDistance() < 5) {
+    if(this.getDistance() < 10) {
       gotBlock = true;
     } else {
       gotBlock = false;
@@ -74,6 +74,6 @@ public class Collect extends LinearOpMode {
 
   }
   public void runOpMode() {
-
+    
   }
 }

@@ -20,9 +20,6 @@ public class SciLift extends LinearOpMode {
   public SciLift(DcMotor mtr) {
     motor = mtr;
     motor.setDirection(DcMotor.Direction.FORWARD);
-    
-    motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     // touch = t;
     // touch.setMode(DigitalChannel.Mode.INPUT);
@@ -31,13 +28,13 @@ public class SciLift extends LinearOpMode {
     position = motor.getCurrentPosition();
   }
 
-  public void update() {
-    if(state == "rest") {
-      telemetry.addData("Lift Status:", state);
-    } else if(state == "down") {
-      this.down();
-    }
-  }
+  // public void update() {
+  //   if(state == "rest") {
+  //     telemetry.addData("Lift Status:", state);
+  //   } else if(state == "down") {
+  //     this.down();
+  //   }
+  // }
 
   public void home() {
 
@@ -54,7 +51,7 @@ public class SciLift extends LinearOpMode {
   public void down() {
     position = motor.getCurrentPosition();
 
-    motor.setPower(0.3);
+    motor.setPower(0.6);
 
     // kill the motor if the touch sensor gets pressed
   }
@@ -70,7 +67,7 @@ public class SciLift extends LinearOpMode {
   public void up() {
     position = motor.getCurrentPosition();
 
-    motor.setPower(-0.6);
+    motor.setPower(-1);
 
     // kill the motor if the touch sensor gets pressed
   }
@@ -86,10 +83,6 @@ public class SciLift extends LinearOpMode {
   public double getPower() {
     double p = motor.getPower();
     return p;
-  }
-  
-  public double getClicks() {
-    return motor.getCurrentPosition();
   }
 
   public void runOpMode() {

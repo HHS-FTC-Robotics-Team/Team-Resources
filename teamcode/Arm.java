@@ -17,60 +17,30 @@ public class Arm extends LinearOpMode {
   public String state = "rest";
 
 
-  public Arm(DcMotor mtr, DigitalChannel t) {
+  public Arm(DcMotor mtr) {
     motor = mtr;
-    motor.setDirection(DcMotor.Direction.REVERSE);
-
-    touch = t;
-    touch.setMode(DigitalChannel.Mode.INPUT);
-
-    position = motor.getCurrentPosition();
+    motor.setDirection(DcMotor.Direction.FORWARD);
   }
-
-//  public void update() {
-//    if(state == "rest") {
-//      telemetry.addData("Lift Status:", state)
-//    } else if(state == "down") {
-//      this.down();
-//    }
-//  }
 
 
   public void retract(double power) {
-    position = motor.getCurrentPosition();
-
     motor.setPower(1 * power);
-
-    // kill the motor if the touch sensor gets pressed
   }
 
   public void retract() {
-    position = motor.getCurrentPosition();
-
     motor.setPower(1);
-
-    // kill the motor if the touch sensor gets pressed
   }
 
   public void extend(double power) {
-    position = motor.getCurrentPosition();
-
     motor.setPower(-1 * power);
-
-    // kill the motor if the touch sensor gets pressed
   }
 
   public void extend() {
-    position = motor.getCurrentPosition();
     motor.setPower(-1);
   }
 
   public void rest() {
-    position = motor.getCurrentPosition();
-
     motor.setPower(0);
-
-    // kill the motor if the touch sensor gets pressed
   }
 
   public double getPower() {

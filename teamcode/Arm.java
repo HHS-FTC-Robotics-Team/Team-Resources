@@ -19,7 +19,7 @@ public class Arm extends LinearOpMode {
 
   public Arm(DcMotor mtr, DigitalChannel t) {
     motor = mtr;
-    motor.setDirection(DcMotor.Direction.FORWARD);
+    motor.setDirection(DcMotor.Direction.REVERSE);
 
     touch = t;
     touch.setMode(DigitalChannel.Mode.INPUT);

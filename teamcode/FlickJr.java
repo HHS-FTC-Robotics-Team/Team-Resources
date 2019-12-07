@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Flick extends LinearOpMode {
+public class FlickJr extends LinearOpMode {
 
   private Servo servo = null;
   private double max = .1; // Maximum rotational position
   private double min = .8; // Minimum rotational position
 
-  public Flick (Servo s) {
+  public FlickJr (Servo s) {
     servo = s;
   }
 

@@ -7,14 +7,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 
 public class Collect extends LinearOpMode {
 
   private DcMotor Lmtr = null;
   private DcMotor Rmtr = null;
-  private DistanceSensor dist = null;
+  private Rev2mDistanceSensor dist = null;
 
-  public Collect (DcMotor l, DcMotor r, DistanceSensor d) {
+  public Collect (DcMotor l, DcMotor r, Rev2mDistanceSensor d) {
     Lmtr = l;
     Rmtr = r;
     Lmtr.setDirection(DcMotor.Direction.FORWARD);
@@ -24,7 +25,7 @@ public class Collect extends LinearOpMode {
   }
 
   public double getDistance() {
-    double distance = dist.getDistance(DistanceUnit.MM);
+    double distance = dist.getDistance(DistanceUnit.CM);
     return distance;
   }
 

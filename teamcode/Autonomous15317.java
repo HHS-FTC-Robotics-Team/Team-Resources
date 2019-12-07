@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -50,14 +51,17 @@ public class Autonomous15317 extends LinearOpMode {
           hardwareMap.get(DcMotor.class, "rfmotor"),
           hardwareMap.get(DcMotor.class, "lfmotor"),
           hardwareMap.get(DcMotor.class, "lbmotor")
-      );
+        );
 
-        // c = new Collect(
-        // );
+        c = new Collect(
+        hardwareMap.get(DcMotor.class, "col_left"),
+        hardwareMap.get(DcMotor.class, "col_right"),
+        hardwareMap.get(Rev2mDistanceSensor.class, "distance_sensor")
+        );
         
         f = new Find(
-                //hardwareMap.get()
-            );
+          //hardwareMap.get()
+        );
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
@@ -69,13 +73,16 @@ public class Autonomous15317 extends LinearOpMode {
         waitForStart();
         
         //For testing, push operation here:
-        gps.state = "seek";
+        // gps.forward();
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gps.update();
             
-            telemetry.addData("State", gps.state);
-            //telemetry.addData("clicks", d.getClickslf());
+            telemetry.addData("State", gps.states[gps.count]);
+            telemetry.addData("Count", gps.count);
+            telemetry.addData("Angle", gps.getAngle());
+            telemetry.addData("Stones", gps.find());
+            // telemetry.addData("clicks", d.getClickslf());
             // double angle = gps.find();
             // telemetry.addData("Angle: ", angle);
             telemetry.update();

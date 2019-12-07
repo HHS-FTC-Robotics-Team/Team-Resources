@@ -19,7 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import java.util.stream.Collector; //DISGUSTING
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import java.lang.reflect.Array;
 import org.firstinspires.ftc.teamcode.Collect;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -52,6 +53,12 @@ public class Gpsbrain extends LinearOpMode {
   double travelled = 0;
   double goalclicks = 0;
   double startclicks = 0;
+  
+  public String[] states = new String[]{"forward", "seek","turn","collect","forward","strafeRight","out","rest"};
+  private double[] args = new double[]{-300, 0, 180, 0, -300,300, 0,0};
+  public int count = 0;
+  private boolean[] isArgs = new boolean[]{true, false, true, false, true, true, false,false};
+
 
   private BNO055IMU imu = null;
   private Orientation lastAngles = new Orientation();
@@ -75,173 +82,152 @@ public class Gpsbrain extends LinearOpMode {
       f = find;
   }
 
+  
+   public void pop() {
+    count = count + 1;
+  }
 
-  // public void AutoSkystone() {
-  //   private double initForward = 1000 //clicks forward at the start
-  //   private double turn180 = 180 //degrees to flip around 180
-  //   private double collectorGrabSpeed = 1 //speed of collector when grabbing
-  //   private double distSensorCheck = 5 //how low the dist sensor should read to count as collected (if needed?)
-  //   private double distStrafeLeft = 10000 //how far to go to reach build zone
-  //   private double dropTurn = -45 //degrees to turn before dropping stone
-  //   private double collectorDropSpeed = -1 //speed of collector when dropping
-  //
-  //   private double
-  //
-  //   this.forward(initForward)
-  //   state = "seek"
-  //
-  //   collect.in()
-  //   this.forward(low power) until distsensor < distSensorCheck
-  //   //record distance travelled = distToBrick
-  //   //make new forward function?
-  //   collect.rest()
-  //
-  //   this.reverse(distToBrick)
-  //   this.strafeLeft(distStrafeLeft)
-  //   this.turn(dropTurn)
-  //
-  //   collect.out()
-  //   //or
-  //   claw.grab
-  //   arm.extend(amt)
-  //   clas.release
-  //
-  //   //==========================
-  //   states
-  //   "forward"
-  //   "seek"
-  //   collect.in ///////
-  //   "forward"       //   > state "collect"
-  //   c.getDistance() //
-  //   collect.rest // //
-  //   "reverse"
-  //   "strafeLeft"
-  //   "turn"
-  //   collect.out
-  //
-  //   //questions
-  //   how will we specify amount to move
-  //   how to go from state to state
-  //   will we need something different to pick up the block
-  //   how will we drop the block
-  // }
-
-  // public void collectStone() {
-  //   collect.in ///////
-  //   "forward"       //   > state "collect"
-  //   c.getDistance() //
-  //   collect.rest /////
-
-
-  //   c.in()
-
-  // }
+  public void pop(double argument) {
+    // arg = argument;
+    count = count + 1;
+  }
 
   public void update() {
-    if(state == "rest") {
+    if(states[count] == "rest") {
       // nothing
       d.setPower(0, 0, 0, 0);
     }
-    if(state == "turn") {
+    if(states[count] == "turn") {
+      if (isArgs[count]) {
+        this.turn(args[count]);
+        isArgs[count] = false;
+      }
       this.turn();
     }
-    if(state == "forward"){
+    if(states[count] == "forward"){
+      if (isArgs[count]) {
+        this.forward(args[count]);
+        isArgs[count] = false;
+      }
       this.forward();
     }
-    if(state == "strafeLeft"){
-      this.strafeLeft();
-    }
-    if(state == "strafeRight"){
-      this.strafeRight();
-    }
-    if(state == "strafeRight"){
-      this.seek();
-    }
-    if(state == "seek") {
-      // d.setPower(0, 0, 0, 0);
-      double angle = f.findSkystoneAngle();
-      if(angle > 1) {
-        d.setPower(0, 1*angle/15, 0, 0);
-      } else if(angle < -1) {
-        d.setPower(0, 1*angle/15, 0, 0);
-      } else if(angle < 1 && angle > -1) {
-        state = "rest";
+    if(states[count] == "strafeLeft"){
+      if (isArgs[count]) {
+        this.strafeLeft(args[count]);
+        isArgs[count] = false;
       }
-      // d.setPower(0, -1, 0, 0);
-
+      // d.setPower(0, -1, 0, 0.3);
+      strafeLeft();
+    }
+    if(states[count] == "strafeRight"){
+      if (isArgs[count]) {
+        this.strafeRight(args[count]);
+        isArgs[count] = false;
+      }
+      // d.setPower(0, -1, 0, 0.3);
+      strafeRight();
+    }
+    if(states[count] == "seek") {
+      double angle = f.findSkystoneAngle();
+      //d.setPower(0, 1*angle/15, 0, 0.2);
+      if(angle < 1 && angle > -1) {
+        pop();
+      } else {
+        d.setPower(0, 1*angle/15, 0, 0.3);
+      }
+    }
+    if(states[count] == "collect") {
+      if(collect.getDistance() > 20) {
+        d.setPower(1, 0, 0, 0.5);
+        collect.in();
+      } else if (collect.getDistance() < 20) {
+        collect.rest();
+        d.setPower(0, 0, 0, 0);
+        pop();
+      }
+    }
+    if(states[count] == "out") {
+      if(collect.getDistance() < 20) {
+        collect.out();
+      } else if (collect.getDistance() > 20) {
+        collect.rest();
+        pop();
+      }
     }
   }
 
   public void turn() {
       theta = getAngle();
-      telemetry.addData("Angle: ", theta);
-      telemetry.addData("Look", "Here");
-      // d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) , 0);
-      // if(Math.abs(theta - dtheta) < 2) {
-      //   state = "rest";
-      // }
+      //telemetry.addData("Angle: ", theta);
+      //telemetry.addData("Look", "Here");
+      d.setPower(0, 0, (dtheta - theta) / (Math.abs(dtheta - theta)) , 0.6);
+      if(Math.abs(theta - dtheta) < 2) {
+        pop();
+      }
   }
   public void turn(double degrees){
       dtheta = theta + degrees;
-      state = "turn";
   }
 
   public void forward(){
     double current = d.getClickslf();
+    if(current > goalclicks - 25 && current < goalclicks + 25) {
+      pop();
+    } else if(current < goalclicks) {
+      d.setPower(1, 0, 0, 0.3);
+    } else if(current > goalclicks) {
+      d.setPower(-1, 0, 0, 0.3);
+    }
+    // if(current < goalclicks) {
+    //   d.setPower(1,0,0,0.3);
+    // } else {
+    //   pop();
+    // }
+  }
+  public void backward(){
+    double current = d.getClickslf();
     if(current < goalclicks) {
-      d.setPower(1,0,0,0);
+      d.setPower(1,0,0,0.3);
     } else {
-      state = "rest";
+      pop();
     }
   }
 
   public void forward(double clicks){
-   startclicks = d.getClickslf(); // where the encoder starts
-   goalclicks = startclicks + clicks; // how far to go
-   state = "forward";
+      startclicks = d.getClickslf(); // where the encoder starts
+      goalclicks = startclicks + clicks; // how far to go
   }
   public void strafeLeft(double clicks){
    startclicks = d.getClickslf(); // where the encoder starts
-   goalclicks = startclicks - clicks; // how far to go
-   state = "strafeLeft";
+   goalclicks = startclicks + clicks; // how far to go
   }
   public void strafeRight(double clicks){
    startclicks = d.getClickslf(); // where the encoder starts
-   goalclicks = startclicks + clicks; // how far to go
+   goalclicks = startclicks - clicks; // how far to go
    state = "strafeRight";
   }
 
 
   public void strafeLeft(){
     double current = d.getClickslf();
-    if(current > goalclicks) {
-     d.setPower(0,-1,0,0);
+    if(current < goalclicks) {
+     d.setPower(0,-1,0,1);
     } else {
      d.setPower(0,0,0,0);
-     state = "rest";
+     pop();
     }
   }
   public void strafeRight() {
     double current = d.getClickslf();
-    if(current < goalclicks){
-      d.setPower(0,1,0,0);
+    if(current > goalclicks){
+      d.setPower(0,1,0,1);
     } else {
       d.setPower(0,0,0,0);
-      state = "rest";
+      pop();
     }
   }
 
-  public void drive(){
-    double h =   Math.sqrt((x-dx)*(x-dx)- (y-dy)*(y-dy));
-    if (travelled < h){
-      d.setPower(1,1,1,0);
-      d.motorlf.getCurrentPosition();
-    } else {
-      d.setPower(0,0,0,0);
-      state = "rest";
-    }
-  }
-
+ 
 
   public void seek(){
 
@@ -280,7 +266,7 @@ public class Gpsbrain extends LinearOpMode {
 
     Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-    double deltaAngle = angles.secondAngle - lastAngles.secondAngle;
+    double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
     if (deltaAngle < -180)
         deltaAngle += 360;

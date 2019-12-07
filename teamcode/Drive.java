@@ -47,6 +47,7 @@ public class Drive extends LinearOpMode {
     if (Trigger > 0) {
       double max = findMax(leftfront,leftback,rightfront,rightback);
       max = max / Trigger;
+      max = Math.abs(max);
       leftfront = leftfront / max;
       leftback = leftback / max;
       rightfront = rightfront / max;

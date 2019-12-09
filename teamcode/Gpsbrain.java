@@ -53,7 +53,7 @@ public class Gpsbrain extends LinearOpMode {
   double travelled = 0;
   double goalclicks = 0;
   double startclicks = 0;
-  
+
   public String[] states = new String[]{"forward", "seek","turn","collect","forward","strafeRight","out","rest"};
   private double[] args = new double[]{-300, 0, 180, 0, -300,300, 0,0};
   public int count = 0;
@@ -82,7 +82,7 @@ public class Gpsbrain extends LinearOpMode {
       f = find;
   }
 
-  
+
    public void pop() {
     count = count + 1;
   }
@@ -184,14 +184,7 @@ public class Gpsbrain extends LinearOpMode {
     //   pop();
     // }
   }
-  public void backward(){
-    double current = d.getClickslf();
-    if(current < goalclicks) {
-      d.setPower(1,0,0,0.3);
-    } else {
-      pop();
-    }
-  }
+
 
   public void forward(double clicks){
       startclicks = d.getClickslf(); // where the encoder starts
@@ -227,7 +220,7 @@ public class Gpsbrain extends LinearOpMode {
     }
   }
 
- 
+
 
   public void seek(){
 

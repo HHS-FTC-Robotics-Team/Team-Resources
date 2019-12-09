@@ -26,13 +26,13 @@ public class Drive extends LinearOpMode {
     motorlf.setDirection(DcMotor.Direction.FORWARD);
     powerlb = 0;
     motorlb = lb;
-    motorlb.setDirection(DcMotor.Direction.FORWARD);
+    motorlb.setDirection(DcMotor.Direction.REVERSE);
     powerrf = 0;
     motorrf = rf;
     motorrf.setDirection(DcMotor.Direction.REVERSE);
     powerrb = 0;
     motorrb = rb;
-    motorrb.setDirection(DcMotor.Direction.REVERSE);
+    motorrb.setDirection(DcMotor.Direction.FORWARD);
     
     motorlf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     motorlf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -47,6 +47,7 @@ public class Drive extends LinearOpMode {
     if (Trigger > 0) {
       double max = findMax(leftfront,leftback,rightfront,rightback);
       max = max / Trigger;
+      max = Math.abs(max);
       leftfront = leftfront / max;
       leftback = leftback / max;
       rightfront = rightfront / max;

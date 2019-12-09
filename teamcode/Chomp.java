@@ -17,32 +17,47 @@ public class Chomp {
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
     boolean rampUp = true;
-    
+
     public Chomp(Servo s) {
         servo = s;
         servo.setPosition(position);
     }
-    
+
     public void out() {
         if (position <= 0.99) {
             position += INCREMENT ;
-            
         } else {
             position = 0.99;
         }
         servo.setPosition(position);
     }
-    
-    public void in() {
-        if (position >= 0.01) {
-            position -= INCREMENT ;
-        } else {
-            position = 0.01;
-        }
-        servo.setPosition(position);
+
+    public void out(double amt) {
+      position += amt;
+      if (position > 0.99) {
+        position = 0.99;
+      }
+      servo.setPosition(position);
     }
-    
+
+    public void in() {
+      if (position >= 0.01) {
+          position -= INCREMENT ;
+      } else {
+          position = 0.01;
+      }
+      servo.setPosition(position);
+    }
+
+    public void in(double amt) {
+      position -= amt;
+      if (position < 0.01) {
+        position = 0.01;
+      }
+      servo.setPosition(position);
+    }
+
     public void runOpMode() {
-    
+
     }
 }

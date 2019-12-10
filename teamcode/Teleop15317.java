@@ -62,6 +62,9 @@ public class Teleop15317 extends LinearOpMode {
       flick = new Flick(
         hardwareMap.get(Servo.class, "flick")
       );
+      flickjr = new FlickJr(
+        hardwareMap.get(Servo.class, "hit")
+      );
       foundation = new Foundation(
         hardwareMap.get(Servo.class, "foundationleft"),
         hardwareMap.get(Servo.class, "foundationright")
@@ -92,6 +95,13 @@ public class Teleop15317 extends LinearOpMode {
           flick.up();
         } else {
           flick.down();
+        }
+        if (gamepad1.b) { //collector servo
+          telemetry.addData("Flick Jr", "up");
+          flickjr.up();
+        } else {
+          telemetry.addData("Flick Jr", "down");
+          flickjr.down();
         }
 
         if (gamepad1.y) {
@@ -138,7 +148,9 @@ public class Teleop15317 extends LinearOpMode {
         telemetry.addData("lb", d.getPowerlb());
         telemetry.addData("rf", d.getPowerrf());
         telemetry.addData("rb", d.getPowerrb());
-        // telemetry.addData("Orientation")
+        telemetry.addData("Clicks: ", d.getClickslf());
+        telemetry.addData("Lift", lift.getClicks());
+        // telemetry.addData("O,rientation")
         // telemetry.addData("State")
         // telemetry.addData("x,y")
         telemetry.update();

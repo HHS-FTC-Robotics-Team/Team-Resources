@@ -101,7 +101,11 @@ public class Teleop15317 extends LinearOpMode {
         } else {
           flick.down();
         }
+<<<<<<< HEAD
         if (gamepad2.y) { //collector servo
+=======
+        if (gamepad1.b) { //collector servo
+>>>>>>> 804c3cc60034a62947af971eaf804fa87c156880
           telemetry.addData("Flick Jr", "up");
           flickjr.up();
         } else {

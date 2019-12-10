@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -27,69 +28,59 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.Gpsbrain;
+import org.firstinspires.ftc.teamcode.GpsbrainRIGHT;
 import org.firstinspires.ftc.teamcode.Drive;
-import org.firstinspires.ftc.teamcode.Collect;
+import org.firstinspires.ftc.teamcode.Chomp;
 import org.firstinspires.ftc.teamcode.Find;
-import org.firstinspires.ftc.teamcode.SciLift;
 
 
 @Autonomous
 
-public class Autonomous15317 extends LinearOpMode {
+public class Autonomous6383RIGHT extends LinearOpMode {
 
     private Drive d;
-    private Collect c;
+    private Chomp c;
     private BNO055IMU imu;
-    private Gpsbrain gps;
+    private GpsbrainRIGHT gps;
     private Find f;
-    private SciLift lift;
 
     @Override
     public void runOpMode() {
 
         d = new Drive(
-          hardwareMap.get(DcMotor.class, "rbmotor"),
-          hardwareMap.get(DcMotor.class, "rfmotor"),
-          hardwareMap.get(DcMotor.class, "lfmotor"),
-          hardwareMap.get(DcMotor.class, "lbmotor")
+          hardwareMap.get(DcMotor.class, "motorrb"),
+          hardwareMap.get(DcMotor.class, "motorrf"),
+          hardwareMap.get(DcMotor.class, "motorlf"),
+          hardwareMap.get(DcMotor.class, "motorlb")
         );
 
-        c = new Collect(
-        hardwareMap.get(DcMotor.class, "col_left"),
-        hardwareMap.get(DcMotor.class, "col_right"),
-        hardwareMap.get(Rev2mDistanceSensor.class, "distance_sensor")
+        c = new Chomp(
+          hardwareMap.get(Servo.class, "chomp")
         );
-        
+
         f = new Find(
           //hardwareMap.get()
-        );
-        
-        lift = new SciLift(
-            hardwareMap.get(DcMotor.class, "liftmotor")
         );
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
-        gps = new Gpsbrain(d, imu, c, f, lift);
+        gps = new GpsbrainRIGHT(d, imu, c, f);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        
+
         //For testing, push operation here:
         // gps.forward();
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gps.update();
-            
+
             telemetry.addData("State", gps.states[gps.count]);
             telemetry.addData("Count", gps.count);
-            //telemetry.addData("Angle", gps.getAngle());
+            telemetry.addData("Angle", gps.getAngle());
             telemetry.addData("Stones", gps.find());
-            telemetry.addData("Stones", gps.lift.getClicks());
-            
             // telemetry.addData("clicks", d.getClickslf());
             // double angle = gps.find();
             // telemetry.addData("Angle: ", angle);

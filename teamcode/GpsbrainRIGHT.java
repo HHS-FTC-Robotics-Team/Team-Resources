@@ -21,7 +21,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import java.lang.reflect.Array;
-import org.firstinspires.ftc.teamcode.Collect;
+import org.firstinspires.ftc.teamcode.Chomp;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -37,10 +37,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Drive;
 import org.firstinspires.ftc.teamcode.Find;
-import org.firstinspires.ftc.teamcode.SciLift;
 
 
-public class Gpsbrain extends LinearOpMode {
+public class GpsbrainRIGHT extends LinearOpMode {
 
   public String state = "rest";
 
@@ -54,43 +53,22 @@ public class Gpsbrain extends LinearOpMode {
   double travelled = 0;
   double goalclicks = 0;
   double startclicks = 0;
-  
-  double liftgoalclicks = 0;
-  double liftstartclicks = 0;
-  
-  //public String[] states = new String[]{"lift", "rest"};
-  //private double[] args = new double[]{-1000, 0};
+
+  public String[] states = new String[]{"forward","strafeRight", "rest"};
+  private double[] args = new double[]{300,12000,0};
   public int count = 0;
-  //private boolean[] isArgs = new boolean[]{true, false};
+  private boolean[] isArgs = new boolean[]{true,true, false};
 
 
-  // Collect
-  // public String[] states = new String[]{"forward", "seek","turn","collect","forward","strafeRight","out","rest"};
-  // private double[] args = new double[]{-1000, 0, 180, 0, -2500,7000, 0,0};
-  // private boolean[] isArgs = new boolean[]{true, false, true, false, true, true, false,false};
-
-  
-  // Park
-  // public String[] states = new String[]{"forward", "strafeRight"};
-  // private double[] args = new double[]{-1000, 5600};
-  // private boolean[] isArgs = new boolean[]{true, true};
-  
-  //Wait and Park
-  public String[] states = new String[]{"sleep", "forward", "strafeLeft"};
-  private long[] args = new long[]{24000,-500, 5600};
-  private boolean[] isArgs = new boolean[]{true, true, true};
-
-
-  public SciLift lift = null;
   private BNO055IMU imu = null;
   private Orientation lastAngles = new Orientation();
   private double globalAngle, power = 0.30, correction;
 
 
-  Collect collect = null;
+  Chomp collect = null;
   Find f = null;
 
-  public Gpsbrain(Drive drive, BNO055IMU acc, Collect c, Find find, SciLift scl) {
+  public GpsbrainRIGHT(Drive drive, BNO055IMU acc, Chomp c, Find find) {
       d = drive;
       BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -102,15 +80,14 @@ public class Gpsbrain extends LinearOpMode {
       imu.initialize(parameters);
       collect = c;
       f = find;
-      lift = scl;
   }
 
-  
+
    public void pop() {
     count = count + 1;
   }
 
-  public void pop(long argument) {
+  public void pop(double argument) {
     // arg = argument;
     count = count + 1;
   }
@@ -119,7 +96,6 @@ public class Gpsbrain extends LinearOpMode {
     if(states[count] == "rest") {
       // nothing
       d.setPower(0, 0, 0, 0);
-      lift.motor.setPower(0);
     }
     if(states[count] == "turn") {
       if (isArgs[count]) {
@@ -154,75 +130,24 @@ public class Gpsbrain extends LinearOpMode {
     if(states[count] == "seek") {
       double angle = f.findSkystoneAngle();
       //d.setPower(0, 1*angle/15, 0, 0.2);
-      if(angle < 10 && angle > -10) {
+      if(angle < 1 && angle > -1) {
         pop();
       } else {
-        d.setPower(0, 1*angle/20, 0, 0);
+        d.setPower(0, 1*angle/15, 0, 0.3);
       }
     }
     if(states[count] == "collect") {
-      if(collect.getDistance() > 10) {
-        d.setPower(1, 0, 0, 0.5);
-        collect.in();
-      } else if (collect.getDistance() < 10) {
-        collect.rest();
-        d.setPower(0, 0, 0, 0);
-        pop();
+      if (isArgs[count]) {
+        collect.in(args[count]); // no way to pop
+        isArgs[count] = false;
       }
     }
     if(states[count] == "out") {
-      if(collect.getDistance() < 20) {
-        collect.out();
-      } else if (collect.getDistance() > 20) {
-        collect.rest();
-        pop();
-      }
-    }
-    if(states[count] == "lift"){
       if (isArgs[count]) {
-        lift.motor.setPower(-0.8);
-        sleep(2000);
-        lift.motor.setPower(0);
-        sleep(500);
-        lift.motor.setPower(0.7);
-        sleep(2000);
-        pop();
+        collect.out(args[count]); // no way to pop
         isArgs[count] = false;
-      } else {
-        pop();
       }
     }
-    if(states[count] == "sleep") {
-      if(isArgs[count]) {
-        long slep = args[count];
-        sleep(slep);
-        isArgs[count] = false;
-        pop();
-      } else {
-        pop();
-      }
-    }
-  }
-
-  
-  public void lift(double clicks){
-      liftstartclicks = lift.getClicks(); // where the encoder starts
-      liftgoalclicks = liftstartclicks + clicks; // how far to go
-  }
-  
-  public void lift(){
-    double current = lift.getClicks();
-    if(current > liftgoalclicks - 40 && current < liftgoalclicks + 40) {
-      lift.motor.setPower(0);
-      pop();
-    } else if(current < liftgoalclicks) {
-      lift.motor.setPower(0.7);
-    } else if(current > liftgoalclicks) {
-      lift.motor.setPower(-0.8);
-    }
-    // if(liftgoalclicks == -300) {
-    //   pop();
-    // }
   }
 
   public void turn() {
@@ -296,7 +221,7 @@ public class Gpsbrain extends LinearOpMode {
     }
   }
 
- 
+
 
   public void seek(){
 

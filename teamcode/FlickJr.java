@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class FlickJr extends LinearOpMode {
 
   private Servo servo = null;
-  private double max = .1; // Maximum rotational position
-  private double min = .8; // Minimum rotational position
+  private double max = .3; // Maximum rotational position
+  private double min = 1; // Minimum rotational position
 
   public FlickJr (Servo s) {
     servo = s;

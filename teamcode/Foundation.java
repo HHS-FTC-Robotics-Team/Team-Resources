@@ -11,8 +11,8 @@ public class Foundation extends LinearOpMode {
   private Servo right = null;
   private double rmax = .1; // Maximum rotational position
   private double rmin = .8; // Minimum rotational position
-  private double lmax = .1; // Maximum rotational position
-  private double lmin = .8; // Minimum rotational position
+  private double lmax = 1; // Maximum rotational position
+  private double lmin = .3; // Minimum rotational position
 
   public Foundation (Servo l, Servo r) {
     left = l;

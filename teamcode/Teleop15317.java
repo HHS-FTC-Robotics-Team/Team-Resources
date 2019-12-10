@@ -33,6 +33,11 @@ public class Teleop15317 extends LinearOpMode {
     private FlickJr flickjr;
     private Foundation foundation;
 
+    private flickstate = "rest"
+    private timer1 = 0;
+    private timer2 = 0;
+    private timer3 = 0;
+
 
     @Override
     public void runOpMode() {
@@ -62,6 +67,9 @@ public class Teleop15317 extends LinearOpMode {
       flick = new Flick(
         hardwareMap.get(Servo.class, "flick")
       );
+      flickjr = new FlickJr(
+        hardwareMap.get(Servo.class, "hit")
+      );
       foundation = new Foundation(
         hardwareMap.get(Servo.class, "foundationleft"),
         hardwareMap.get(Servo.class, "foundationright")
@@ -80,18 +88,25 @@ public class Teleop15317 extends LinearOpMode {
           gamepad1.right_trigger
         );
 
-        if (gamepad1.right_bumper) {
+        if (gamepad2.right_bumper) {
           collector.in();
-        } else if (gamepad1.left_bumper) {
+        } else if (gamepad2.left_bumper) {
           collector.out();
         } else {
           collector.rest();
         }
 
-        if (gamepad1.a) { //collector servo
+        if (gamepad2.x) { //collector servo
           flick.up();
         } else {
           flick.down();
+        }
+        if (gamepad2.y) { //collector servo
+          telemetry.addData("Flick Jr", "up");
+          flickjr.up();
+        } else {
+          telemetry.addData("Flick Jr", "down");
+          flickjr.down();
         }
 
         if (gamepad1.y) {
@@ -124,6 +139,45 @@ public class Teleop15317 extends LinearOpMode {
             lift.rest();
         }
 
+        if (gamepad1.a && flickstate != "rest") {
+          flickstate = "flick";
+        }
+
+        if (flickstate == "flick" && timer1 < 1000) {
+          flick.up();
+          timer1 += 1;
+        } else if (timer1 >= 1000) {
+          timer1 = 0;
+          flick.down();
+          flickstate == "flickjr";
+        }
+
+        if (flickstate == "flickjr" && timer2 < 1000) {
+          flickjr.up();
+          timer2 += 1;
+        } else if (timer2 >= 1000) {
+          timer2 = 0;
+          flickjr.down();
+          flickstate == "grab";
+        }
+
+        if (flickstate == "grab" && timer3 < 1000) {
+          claw.grab();
+          timer3 += 1;
+        } else if (timer3 >= 1000) {
+          timer3 = 0;
+          flickstate == "rest";
+        }
+
+        // flick.up();
+        // sleep(1000);
+        // flick.down();
+        // sleep(1000);
+        // flickjr.up();
+        // sleep(1000);
+        // flickjr.down();
+        // sleep(1000);
+        // claw.grab();
 
         telemetry.addData("Status", "Run Time: ");
         // telemetry.addData("Lift Power", lift.getPower());
@@ -138,7 +192,9 @@ public class Teleop15317 extends LinearOpMode {
         telemetry.addData("lb", d.getPowerlb());
         telemetry.addData("rf", d.getPowerrf());
         telemetry.addData("rb", d.getPowerrb());
-        // telemetry.addData("Orientation")
+        telemetry.addData("Clicks: ", d.getClickslf());
+        telemetry.addData("Lift", lift.getClicks());
+        // telemetry.addData("O,rientation")
         // telemetry.addData("State")
         // telemetry.addData("x,y")
         telemetry.update();
